@@ -25,11 +25,11 @@ const userSchema  = new mongoose.Schema({
         return token;
     }
 
-    userSchema.methods.validatePassword = function(hashedPassword){
-        return bcrypt.compare(hashedPassword,this.password)
+    userSchema.methods.validatePassword = function(password){
+        return bcrypt.compare(password,this.password)
     }
 
-    userSchema.statics.hashedPassword = async function(password){
+    userSchema.statics.hashPassword = async function(password){
         return bcrypt.hash(password,10);
     }
 

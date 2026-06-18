@@ -1,6 +1,6 @@
 import express from "express";
 import authController from "../Controllers/auth.Controller";
-
+import isAuth from "../Middleware/auth.middleware.js";
 const authRouter = express.Router();
 
 
@@ -17,6 +17,11 @@ authRouter.post("/register", authController.registerController);
  * @access Public
  */
 authRouter.post("/login", authController.loginController);
+
+/**
+ * @route GET api/v1/user/current
+ */
+authRouter.get("/get-me", isAuth, authController.currentUserController)
 
 /**
  * @route GET /api/v1/user/logout
