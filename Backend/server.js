@@ -6,6 +6,7 @@ import authRouter from "./Routes/auth.Route.js";
 import cookieParser from "cookie-parser";
 dotenv.config();
 import cors from "cors";
+import generateReport from "./Config/gemini.ai.js";
 
 app.use(cors({
     origin : ["http://localhost:5173"],
@@ -14,7 +15,7 @@ app.use(cors({
 const PORT = process.env.PORT || 5000;
 
 connectToDB();
-
+generateReport();
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(cookieParser());
