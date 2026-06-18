@@ -57,7 +57,7 @@ const currentUserController = async(req,res)=>{
     if(!id) return res.status(402).json({message:"not valid user ! please login"});
     const user = await User.findById(id).select("-password");
     if(!user) return res.status(404).json({message:"User not found"});
-    return res.status(201).json(user);
+    return res.status(200).json(user);
 }
 
 /**
