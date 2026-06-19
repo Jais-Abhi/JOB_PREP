@@ -50,7 +50,7 @@ const skillGapSchema = new mongoose.Schema({
 
 const preparationPlanSchema = new mongoose.Schema({
     day:{
-        type : number,
+        type : Number,
         required : [true, "Day is required"]
     },
     focusArea : {
