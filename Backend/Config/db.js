@@ -11,7 +11,7 @@ const connectToDB = async()=>{
         console.log("Connected to Database")
     }
     catch(err){
-        console.log(err.MONGO_URI)
+        console.log(err.message)
     }
 }
 

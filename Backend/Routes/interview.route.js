@@ -1,6 +1,7 @@
 import express from "express"
 import isAuth from "../Middleware/auth.middleware.js";
 import {generateReportController} from "../Controllers/interview.controller.js"
+import upload from "../Middleware/fileUpload.middleware.js";
 
 const interviewRouter = express.Router();
 
@@ -9,6 +10,6 @@ const interviewRouter = express.Router();
  * @desc Generate Interview Report
  * @access Private
  */
-interviewRouter.post("/generate-report",isAuth, generateReportController);
+interviewRouter.post("/generate-report",isAuth,upload.single("resume"), generateReportController);
 
 export default interviewRouter;
