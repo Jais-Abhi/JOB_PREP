@@ -71,7 +71,7 @@ export default function Register() {
     setLoading(true);
     console.log(formData)
     try {
-      const response = await api.post("/api/v1/user/auth/register",{
+      const response = await api.post("/api/user/auth/register",{
         name: formData.name,
         email: formData.email,
         password: formData.password
