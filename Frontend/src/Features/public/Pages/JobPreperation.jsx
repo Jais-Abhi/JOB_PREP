@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import api from '@/Config/api';
 
-const Home = () => {
+const JobPreperation = () => {
   // Form State
   const [selfDescription, setSelfDescription] = useState('');
   const [jobDescription, setJobDescription] = useState('');
@@ -609,4 +609,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default JobPreperation;

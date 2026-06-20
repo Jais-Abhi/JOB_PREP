@@ -13,8 +13,7 @@ const generateReportController = async (req, res) => {
             const parser = new PDFParse({ data: new Uint8Array(req.file.buffer) });
             const pdfData = await parser.getText();
             resumeText = pdfData.text;
-            console.log("--- Extracted text from PDF Resume ---");
-            console.log(resumeText);
+
         }
         console.log("self Description:", selfDescription);
         console.log("Job Description:", jobDescription);
@@ -23,7 +22,6 @@ const generateReportController = async (req, res) => {
         // ready to be sent to your AI model.
 
         const report = await generateReport({resume:resumeText,selfDescription:selfDescription,jobDescription:jobDescription});
-        console.log(report);
 
         const interviewReport = await InterviewReport.create({
             jobDescription : jobDescription,

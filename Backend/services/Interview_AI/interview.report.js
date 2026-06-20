@@ -28,7 +28,6 @@ const generateReport = async ({resume,selfDescription,jobDescription}) => {
             }
         });
         const parsedJson = JSON.parse(response.text);
-        console.log(parsedJson);
         return parsedJson;
     } catch (error) {
         console.error("Failed to generate report:", error);
