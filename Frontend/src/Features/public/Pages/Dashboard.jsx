@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import {
   FileText,
@@ -16,27 +16,6 @@ import {
 } from 'lucide-react';
 
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const contentRef = useRef(null);
-
-  useEffect(() => {
-    if (contentRef.current) {
-      gsap.fromTo(
-        contentRef.current,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }
-      );
-    }
-  }, []);
-
-  const menuItems = [
-    { icon: FileText, label: 'Resume', color: 'from-blue-500 to-cyan-500' },
-    { icon: Briefcase, label: 'Job Preparation', color: 'from-purple-500 to-pink-500' },
-    { icon: Map, label: 'Roadmaps', color: 'from-emerald-500 to-teal-500' },
-    { icon: CheckSquare, label: 'My Plans', color: 'from-amber-500 to-orange-500' },
-    { icon: User, label: 'Account', color: 'from-indigo-500 to-blue-500' },
-    { icon: Settings, label: 'Settings', color: 'from-slate-600 to-slate-700' },
-  ];
 
   const preparationPlans = [
     { title: 'Frontend Development', progress: 65, status: 'In Progress' },
@@ -46,119 +25,15 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
-      {/* Sidebar */}
-      <motion.div
-        animate={{ width: sidebarOpen ? 280 : 80 }}
-        transition={{ duration: 0.4, ease: 'easeInOut' }}
-        className="fixed left-0 top-0 h-screen bg-white border-r border-slate-200 shadow-lg z-50 overflow-hidden"
-        onMouseEnter={() => setSidebarOpen(true)}
-        onMouseLeave={() => setSidebarOpen(false)}
-      >
-        {/* Logo Section */}
-        <motion.div
-          className="flex items-center h-20 pl-[20px] bg-gradient-to-r from-indigo-600 to-blue-600 border-b border-indigo-700"
-        >
-          <motion.div
-            animate={{ scale: sidebarOpen ? 1 : 1 }}
-            className="flex items-center gap-3 origin-left"
-          >
-            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center">
-              <Briefcase className="text-white" size={24} />
-            </div>
-            {sidebarOpen && (
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.1 }}
-                className="text-white font-bold text-lg whitespace-nowrap"
-              >
-                PrepAI
-              </motion.span>
-            )}
-          </motion.div>
-        </motion.div>
-
-        {/* Menu Items */}
-        <nav className="mt-8 px-3 space-y-3 flex flex-col items-center w-full">
-          {menuItems.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <motion.div
-                key={index}
-                whileHover={{ x: sidebarOpen ? 0 : 5 }}
-                className="group relative flex w-full"
-              >
-                <button
-                  className={`flex items-center gap-4 py-3 px-3 rounded-lg transition-all duration-300 w-full ${
-                    sidebarOpen
-                      ? 'bg-gradient-to-r hover:from-slate-100 hover:to-slate-50'
-                      : 'hover:bg-slate-50'
-                  }`}
-                >
-                  <div className={`flex-shrink-0 bg-gradient-to-br ${item.color} p-2 rounded-lg shadow-md group-hover:shadow-lg transition-shadow`}>
-                    <Icon className="text-white" size={20} />
-                  </div>
-                  {sidebarOpen && (
-                    <motion.span
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.1 }}
-                      className="text-slate-700 font-medium text-sm group-hover:text-indigo-600 whitespace-nowrap"
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </button>
-
-                {/* Tooltip on hover when sidebar closed */}
-                {!sidebarOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    whileHover={{ opacity: 1, x: 10 }}
-                    className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-slate-900 text-white rounded-lg text-sm whitespace-nowrap pointer-events-none"
-                  >
-                    {item.label}
-                  </motion.div>
-                )}
-              </motion.div>
-            );
-          })}
-        </nav>
-
-        {/* Divider */}
-        {sidebarOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mx-4 my-6 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"
-          />
-        )}
-
-        {/* Logout Button */}
-        <motion.div
-          className="absolute bottom-6 left-0 right-0 px-3"
-          whileHover={{ scale: 1.02 }}
-        >
-          <button className="w-full flex items-center gap-4 px-3 py-3 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition-colors duration-300">
-            <div className="flex-shrink-0 w-9 h-9 flex items-center justify-center">
-              <LogOut size={20} />
-            </div>
-            {sidebarOpen && <span className="text-sm font-medium whitespace-nowrap">Logout</span>}
-          </button>
-        </motion.div>
-      </motion.div>
-
-      {/* Main Content */}
-      <div className="flex-1 ml-20 overflow-auto">
-        {/* Top Bar */}
+    <>
+        {/* Dashboard Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 shadow-sm"
+          className="px-8 pt-8 pb-2"
         >
-          <div className="flex items-center justify-between px-8 py-5">
+          <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
                 Welcome Back! 👋
@@ -177,7 +52,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Content Area */}
-        <div ref={contentRef} className="px-8 py-8 space-y-8">
+        <div className="px-8 py-8 space-y-8">
           {/* User Info Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -328,8 +203,7 @@ const Dashboard = () => {
           {/* Footer Spacing */}
           <div className="pb-8" />
         </div>
-      </div>
-    </div>
+    </>
   );
 };
 

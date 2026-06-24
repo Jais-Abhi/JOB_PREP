@@ -38,8 +38,7 @@ const generateReportController = async (req, res) => {
 
         const user = await User.findByIdAndUpdate(
             req._id,
-            { $push: { interviewReports: interviewReport._id } },
-            { new: true }
+            { $push: { interviewReports: interviewReport._id } }
         )
 
         res.status(201).json({ 
