@@ -1,12 +1,30 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation, useNavigate, Link } from 'react-router';
 import { ArrowLeft, User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import api from '../../../Config/api.js';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
+  const handleLogoutClick = () => {
+    setDropdownOpen(false);
+    setIsLogoutDialogOpen(true);
+  };
+
+  const handleConfirmLogout = async () => {
+    try {
+      await api.get('/api/user/auth/logout');
+      setIsLogoutDialogOpen(false);
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
   // Derive page name from pathname
   const getPageName = () => {
@@ -72,7 +90,10 @@ const Navbar = () => {
                   <Settings size={16} /> Settings
                 </Link>
                 <div className="h-px bg-slate-100 my-1"></div>
-                <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
+                <button 
+                  onClick={handleLogoutClick}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                >
                   <LogOut size={16} /> Logout
                 </button>
               </motion.div>
@@ -80,6 +101,45 @@ const Navbar = () => {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Logout Confirmation Dialog */}
+      {createPortal(
+        <AnimatePresence>
+          {isLogoutDialogOpen && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden border border-slate-100"
+              >
+                <div className="p-6">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-600">
+                    <LogOut size={24} />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">Sign out</h3>
+                  <p className="text-slate-500 mb-6">Are you sure you want to sign out of your account?</p>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setIsLogoutDialogOpen(false)}
+                      className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleConfirmLogout}
+                      className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition-colors"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };
