@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../../Redux/Slice/user.slice';
 import { useNavigate, Link } from 'react-router';
 import api from '../../../Config/api';
+import { toast } from 'sonner';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -64,6 +65,7 @@ export default function Login() {
         })
         if(response.status === 200){
             dispatch(setUser(response.data));
+            toast.success("Logged in successfully!");
         }
         
       setFormData({
@@ -75,6 +77,7 @@ export default function Login() {
       navigate('/');
     } catch (error) {
       console.error('Login error:', error);
+      toast.error(error.response?.data?.message || "Login failed!");
     } finally {
       setLoading(false);
     }

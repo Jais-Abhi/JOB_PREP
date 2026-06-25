@@ -15,6 +15,7 @@ const generateReportController = async (req, res) => {
             resumeText = pdfData.text;
 
         }
+        console.log("resume",resumeText);
         console.log("self Description:", selfDescription);
         console.log("Job Description:", jobDescription);
         
@@ -24,6 +25,8 @@ const generateReportController = async (req, res) => {
         const report = await generateReport({resume:resumeText,selfDescription:selfDescription,jobDescription:jobDescription});
 
         const interviewReport = await InterviewReport.create({
+            success : report.success,
+            message : report.message,
             jobDescription : jobDescription,
             resume : resumeText,
             selfDescription : selfDescription,

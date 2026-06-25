@@ -20,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import api from '@/Config/api';
+import { toast } from 'sonner';
 
 const JobPreperation = () => {
   // Form State
@@ -139,14 +140,14 @@ const JobPreperation = () => {
     // Basic validation: PDF only
     const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
     if (!isPdf) {
-      alert('Only PDF documents are supported.');
+      toast.error('Only PDF documents are supported.');
       return;
     }
 
     // Size check: Max 5MB (5 * 1024 * 1024 bytes)
     const maxSizeBytes = 5 * 1024 * 1024;
     if (file.size > maxSizeBytes) {
-      alert('File size exceeds the 5MB limit. Please upload a smaller PDF.');
+      toast.error('File size exceeds the 5MB limit. Please upload a smaller PDF.');
       return;
     }
 
@@ -207,7 +208,7 @@ const JobPreperation = () => {
     e.preventDefault();
     const hasProfile = profileType === 'resume' ? !!resumeFile : !!selfDescription;
     if (!jobDescription || !hasProfile) {
-      alert('Please fill out the required profile field and job description.');
+      toast.warning('Please fill out the required profile field and job description.');
       return;
     }
 
@@ -232,7 +233,7 @@ const JobPreperation = () => {
             
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('An error occurred while submitting.');
+      toast.error('An error occurred while submitting.');
     } finally {
       setIsSubmitting(false);
     }

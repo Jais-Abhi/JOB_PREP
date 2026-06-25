@@ -66,6 +66,13 @@ const preparationPlanSchema = new mongoose.Schema({
 })
 
 const interviewReportSchema = new mongoose.Schema({
+    success : {
+        type : Boolean,
+        required : [true, "Success is required"],
+    },
+    message : {
+        type : String,
+    },
     jobDescription : {
         type : String,
         required : [true, "Job description is required"]

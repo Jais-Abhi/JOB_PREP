@@ -5,18 +5,24 @@ import { setUser, setLoading } from './Redux/Slice/user.slice'
 import api from './Config/api'
 import Register from './Features/Auth/Pages/Register'
 import Login from './Features/Auth/Pages/Login'
-import Dashboard from './Features/public/Pages/Dashboard'
-import Resume from './Features/public/Pages/Resume'
-import AtsCheck from './Features/public/Pages/AtsCheck'
-import CreateResume from './Features/public/Pages/CreateResume'
-import JobPreperation from './Features/public/Pages/JobPreperation'
-import Roadmaps from './Features/public/Pages/Roadmaps'
-import Plans from './Features/public/Pages/Plans'
-import Account from './Features/public/Pages/Account'
-import Settings from './Features/public/Pages/Settings'
+import Dashboard from './Features/dashboard/Dashboard'
+import AtsCheck from './Features/resume-studio/AtsCheck'
+import CreateResume from './Features/resume-studio/CreateResume'
+import ResumeTemplates from './Features/resume-studio/ResumeTemplates'
+import History from './Features/resume-studio/History'
+import JobPreperation from './Features/career-lab/job-preperation/JobPreperation'
+import PastAnalysis from './Features/career-lab/job-preperation/PastAnalysis'
+import SkillRoadmap from './Features/career-lab/roadmaps/SkillRoadmap'
+import PlacementRoadmap from './Features/career-lab/roadmaps/PlacementRoadmap'
+import DsaTracker from './Features/career-lab/roadmaps/DsaTracker'
+import Account from './Features/profile/Account'
+import Settings from './Features/profile/Settings'
+import Plans from './Features/my-plans/Plans'
+import Roadmaps from './Pages/Roadmaps'
+import Resume from './Pages/Resume'
 import MainLayout from './Features/public/Layout/MainLayout'
 import ProtectedRoute from './Features/Auth/Components/ProtectedRoute'
-import NotFound from './Features/public/Pages/NotFound'
+import NotFound from './Pages/NotFound'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -26,12 +32,11 @@ const App = () => {
     const checkAuth = async () => {
       try {
         const response = await api.get('/api/user/auth/account');
-        console.log(response)
         if (response.status === 200) {
           dispatch(setUser(response.data));
         }
       } catch (error) {
-          console.error('Authentication check failed:', error);
+        console.error('Authentication check failed:', error);
       } finally {
         dispatch(setLoading(false));
       }
@@ -52,12 +57,27 @@ const App = () => {
     <Routes>
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
+          {/* Dashboard */}
           <Route path='/' element={<Dashboard />} />
-          <Route path='/job-preparation' element={<JobPreperation />} />
+
+          {/* Resume Studio */}
           <Route path='/resume' element={<Resume />} />
           <Route path='/resume/ats-check' element={<AtsCheck />} />
           <Route path='/resume/create' element={<CreateResume />} />
+          <Route path='/resume/templates' element={<ResumeTemplates />} />
+          <Route path='/resume/history' element={<History />} />
+
+          {/* Career Tools – Job Preparation */}
+          <Route path='/job-preparation' element={<JobPreperation />} />
+          <Route path='/past-analysis' element={<PastAnalysis />} />
+
+          {/* Career Tools – Roadmaps */}
           <Route path='/roadmaps' element={<Roadmaps />} />
+          <Route path='/roadmaps/skill' element={<SkillRoadmap />} />
+          <Route path='/roadmaps/placement' element={<PlacementRoadmap />} />
+          <Route path='/roadmaps/dsa' element={<DsaTracker />} />
+
+          {/* Misc */}
           <Route path='/plans' element={<Plans />} />
           <Route path='/account' element={<Account />} />
           <Route path='/settings' element={<Settings />} />

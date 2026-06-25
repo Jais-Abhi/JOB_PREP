@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Plus, Trash2, CheckCircle2 } from 'lucide-react';
-import { Button } from '../../../components/ui/button';
-import { Input } from '../../../components/ui/input';
-import { Label } from '../../../components/ui/label';
-import { Textarea } from '../../../components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../../../components/ui/card';
-import { Progress } from '../../../components/ui/progress';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Textarea } from '../../components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../../components/ui/card';
+import { Progress } from '../../components/ui/progress';
+import { toast } from 'sonner';
 
 const STEPS = [
   { id: 'personal', title: 'Personal Info', description: 'Your basic details' },
@@ -73,7 +74,7 @@ const CreateResume = () => {
   const handleSubmit = () => {
     console.log('Final Resume Data:', formData);
     // TODO: Send to backend or generate PDF
-    alert("Resume data saved successfully! (Backend integration pending)");
+    toast.success("Resume data saved successfully! (Backend integration pending)");
   };
 
   const renderStepContent = () => {

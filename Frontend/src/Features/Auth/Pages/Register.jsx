@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '../../../Redux/Slice/user.slice';
 import { useNavigate, Link } from 'react-router';
 import api from '../../../Config/api';
+import { toast } from 'sonner';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -79,6 +80,7 @@ export default function Register() {
       console.log(response);
       if(response.status == 200){
         dispatch(setUser(response.data));
+        toast.success("Registration successful!");
       }
       setFormData({
         name: '',
@@ -90,6 +92,7 @@ export default function Register() {
       navigate('/login');
     } catch (error) {
       console.error('Registration error:', error);
+      toast.error(error.response?.data?.message || "Registration failed!");
     } finally {
       setLoading(false);
     }
