@@ -16,6 +16,7 @@ import Account from './Features/public/Pages/Account'
 import Settings from './Features/public/Pages/Settings'
 import MainLayout from './Features/public/Layout/MainLayout'
 import ProtectedRoute from './Features/Auth/Components/ProtectedRoute'
+import NotFound from './Features/public/Pages/NotFound'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const App = () => {
           dispatch(setUser(response.data));
         }
       } catch (error) {
-        console.error('Authentication check failed:', error);
+          console.error('Authentication check failed:', error);
       } finally {
         dispatch(setLoading(false));
       }
@@ -64,6 +65,7 @@ const App = () => {
       </Route>
       <Route path='/register' element={<Register/>} />
       <Route path='/login' element={<Login/>} />
+      <Route path='*' element={<NotFound />} />
     </Routes>
   )
 }

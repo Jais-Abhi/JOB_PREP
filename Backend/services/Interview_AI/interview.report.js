@@ -20,7 +20,10 @@ const generateReport = async ({resume,selfDescription,jobDescription}) => {
         // Strip the '$schema' key to prevent the SDK from stripping responseSchema
         const { $schema, ...responseSchema } = rawSchema;
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            // model: "gemini-2.5-flash",
+            // model: "gemini-2.5-flash-lite",
+            model: "gemini-3.1-flash-lite",
+            
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
