@@ -20,9 +20,9 @@ import Settings from './Features/profile/Settings'
 import Plans from './Features/my-plans/Plans'
 import Roadmaps from './Pages/Roadmaps'
 import Resume from './Pages/Resume'
-import MainLayout from './Features/public/Layout/MainLayout'
 import ProtectedRoute from './Features/Auth/Components/ProtectedRoute'
 import NotFound from './Pages/NotFound'
+import MainLayout from './components/Layout/MainLayout'
 
 const App = () => {
   const dispatch = useDispatch();

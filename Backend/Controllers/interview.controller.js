@@ -1,9 +1,8 @@
 import express from "express";
 import { PDFParse } from "pdf-parse";
-import generateReport from "../services/Interview_AI/interview.report.js";
 import InterviewReport from "../Models/interview.model.js";
 import User from "../Models/user.model.js";
-
+import generateInterviewReport from "../../Backend/services/Interview_AI/interview.report.js"
 const generateReportController = async (req, res) => {
     try {
         const { jobDescription, selfDescription } = req.body;
@@ -22,7 +21,7 @@ const generateReportController = async (req, res) => {
         // At this point, you have both `resumeText` and `jobDescription`
         // ready to be sent to your AI model.
 
-        const report = await generateReport({resume:resumeText,selfDescription:selfDescription,jobDescription:jobDescription});
+        const report = await generateInterviewReport({resume:resumeText,selfDescription:selfDescription,jobDescription:jobDescription});
 
         const interviewReport = await InterviewReport.create({
             success : report.success,

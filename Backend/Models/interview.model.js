@@ -85,11 +85,9 @@ const interviewReportSchema = new mongoose.Schema({
     },
     title:{
         type : String,
-        required : [true, "Title is required"]
     },
     matchScore : {
         type : Number,
-        required : [true, "Match score is required"],
         min : [0, "Match score must be at least 0"],
         max : [100, "Match score cannot exceed 100"]
     },

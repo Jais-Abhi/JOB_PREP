@@ -1,0 +1,89 @@
+{
+  "totalScore": 100,
+  "sections": {
+    "contactInformation": {
+      "maxScore": 10,
+      "criteria": {
+        "fullName": 2,
+        "professionalEmail": 2,
+        "phoneNumber": 2,
+        "linkedin": 2,
+        "githubOrPortfolio": 2
+      }
+    },
+    "resumeStructure": {
+      "maxScore": 15,
+      "criteria": {
+        "professionalSummary": 2,
+        "skillsSection": 2,
+        "experienceSection": 3,
+        "projectsSection": 3,
+        "educationSection": 2,
+        "clearSectionHeadings": 2,
+        "certificationsSection": 1
+      }
+    },
+    "atsFormatting": {
+      "maxScore": 20,
+      "criteria": {
+        "logicalOrganization": 4,
+        "clearSectionSeparation": 3,
+        "atsFriendlyHeadings": 3,
+        "appropriateResumeLength": 2,
+        "professionalFormatting": 3,
+        "consistentFormatting": 3,
+        "minimalDecorativeElements": 2
+      }
+    },
+    "skills": {
+      "maxScore": 15,
+      "criteria": {
+        "technicalSkills": 5,
+        "skillOrganization": 3,
+        "relevantSkills": 3,
+        "softSkills": 2,
+        "duplicateFree": 2
+      }
+    },
+    "experience": {
+      "maxScore": 15,
+      "criteria": {
+        "jobTitle": 2,
+        "companyName": 2,
+        "employmentDates": 2,
+        "bulletPoints": 2,
+        "actionVerbs": 3,
+        "quantifiedAchievements": 4
+      }
+    },
+    "projects": {
+      "maxScore": 15,
+      "criteria": {
+        "projectTitle": 2,
+        "projectDescription": 3,
+        "technologyStack": 3,
+        "githubLink": 2,
+        "liveDemo": 2,
+        "projectImpact": 3
+      }
+    },
+    "education": {
+      "maxScore": 5,
+      "criteria": {
+        "degree": 2,
+        "institution": 1,
+        "graduationYear": 1,
+        "cgpaOrPercentage": 1
+      }
+    },
+    "grammarAndReadability": {
+      "maxScore": 5,
+      "criteria": {
+        "grammar": 2,
+        "spelling": 1,
+        "professionalLanguage": 1,
+        "readability": 1
+      }
+    }
+  }
+}

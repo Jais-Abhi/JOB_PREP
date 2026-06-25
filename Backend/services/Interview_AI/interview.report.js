@@ -1,15 +1,9 @@
-import { GoogleGenAI } from "@google/genai";
-import interviewReportSchema from "./interviewReport.schema.js"
+import generateReport from "../../Config/generateReport.AI.js";
+import interviewReportSchema from "./interviewReport.schema.js";
 
+const generateInterviewReport = async({resume,selfDescription,jobDescription})=>{
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GENAI_API_KEY,
-});
-
-
-const generateReport = async ({resume,selfDescription,jobDescription}) => {
-    try {
-        const prompt = `You are an experienced technical recruiter and interview preparation assistant.
+    const prompt = `You are an experienced technical recruiter and interview preparation assistant.
 
 Your task is to carefully analyze the provided Resume, Self Description, and Job Description, and generate a comprehensive interview report.
 
@@ -74,27 +68,11 @@ Resume: """${resume}"""
 Self Description: """${selfDescription}"""
 Job Description: """${jobDescription}"""
 `;
-        // Convert to JSON Schema using Zod v4's native toJSONSchema()
-        const rawSchema = interviewReportSchema.toJSONSchema();
-        
-        // Strip the '$schema' key to prevent the SDK from stripping responseSchema
-        const { $schema, ...responseSchema } = rawSchema;
-        const response = await ai.models.generateContent({
-            // model: "gemini-2.5-flash",
-            // model: "gemini-2.5-flash-lite",
-            model: "gemini-3.1-flash-lite",
-            
-            contents: prompt,
-            config: {
-                responseMimeType: "application/json",
-                responseSchema: responseSchema,
-            }
-        });
-        const parsedJson = JSON.parse(response.text);
-        return parsedJson;
-    } catch (error) {
-        console.error("Failed to generate report:", error);
-    }
-};
 
-export default generateReport;
+   const report  = await generateReport({prompt,reportSchema : interviewReportSchema});
+   console.log("interview report: ",report)
+   return report;
+
+}
+
+export default generateInterviewReport;
