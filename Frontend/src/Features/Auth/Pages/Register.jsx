@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../../Redux/Slice/user.slice';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import api from '../../../Config/api';
 
 export default function Register() {
@@ -209,12 +209,12 @@ export default function Register() {
         {/* Login Link */}
         <p className="text-center text-gray-600 mt-6">
           Already have an account?{' '}
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="text-indigo-600 hover:text-indigo-700 font-semibold"
           >
             Login here
-          </a>
+          </Link>
         </p>
       </div>
     </div>

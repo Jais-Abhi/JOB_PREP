@@ -3,11 +3,14 @@ import { createPortal } from 'react-dom';
 import { useLocation, useNavigate, Link } from 'react-router';
 import { ArrowLeft, User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../Redux/Slice/user.slice.js';
 import api from '../../../Config/api.js';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
@@ -19,10 +22,12 @@ const Navbar = () => {
   const handleConfirmLogout = async () => {
     try {
       await api.get('/api/user/auth/logout');
-      setIsLogoutDialogOpen(false);
-      navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
+    } finally {
+      dispatch(setUser(null));
+      setIsLogoutDialogOpen(false);
+      navigate('/login');
     }
   };
 
@@ -106,31 +111,36 @@ const Navbar = () => {
       {createPortal(
         <AnimatePresence>
           {isLogoutDialogOpen && (
-            <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm">
+            <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 sm:p-0">
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden border border-slate-100"
+                initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                transition={{ type: 'spring', bounce: 0.3, duration: 0.4 }}
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100"
               >
-                <div className="p-6">
-                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mb-4 text-red-600">
-                    <LogOut size={24} />
+                <div className="p-6 sm:p-8">
+                  <div className="flex justify-center sm:justify-start mb-6">
+                    <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center text-red-500 shadow-inner">
+                      <LogOut size={32} strokeWidth={2} />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">Sign out</h3>
-                  <p className="text-slate-500 mb-6">Are you sure you want to sign out of your account?</p>
-                  <div className="flex gap-3">
+                  <h3 className="text-2xl font-bold text-slate-800 mb-3 text-center sm:text-left">Sign Out</h3>
+                  <p className="text-slate-500 mb-8 text-center sm:text-left text-base leading-relaxed">
+                    You're about to be signed out of your account. You will need to log back in to access your dashboard and saved plans.
+                  </p>
+                  <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4">
                     <button
                       onClick={() => setIsLogoutDialogOpen(false)}
-                      className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors"
+                      className="w-full sm:w-1/2 px-5 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-all duration-200 active:scale-95"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleConfirmLogout}
-                      className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition-colors"
+                      className="w-full sm:w-1/2 px-5 py-3.5 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl shadow-md shadow-red-500/20 transition-all duration-200 active:scale-95 flex items-center justify-center gap-2"
                     >
-                      Sign out
+                      <LogOut size={18} strokeWidth={2.5} /> Yes, Sign out
                     </button>
                   </div>
                 </div>

@@ -5,26 +5,28 @@ const authRouter = express.Router();
 
 
 /**
- * @route POST /api/v1/user/auth/register
+ * @route POST /api/user/auth/register
  * @desc Register a new user
  * @access Public
  */
 authRouter.post("/register", authController.registerController);
 
 /**
- * @route POST /api/v1/user/auth/login
+ * @route POST /api/user/auth/login
  * @desc Login a user
  * @access Public
  */
 authRouter.post("/login", authController.loginController);
 
 /**
- * @route GET api/v1/user/current
+ * @route GET api/user/auth/account
+ * @desc Get current user account info
+ * @access Private
  */
-authRouter.get("/get-me", isAuth, authController.currentUserController)
+authRouter.get("/account", isAuth, authController.currentUserController)
 
 /**
- * @route GET /api/v1/user/logout
+ * @route GET /api/user/logout
  * @desc Logut user and remove token
  * @access Public
  */

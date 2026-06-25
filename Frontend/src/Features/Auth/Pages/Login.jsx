@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../../Redux/Slice/user.slice';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import api from '../../../Config/api';
 
 export default function Login() {
@@ -148,21 +148,21 @@ export default function Login() {
         {/* Forgot Password & Register Links */}
         <div className="mt-6 space-y-3">
           <p className="text-center text-gray-600">
-            <a
-              href="#"
+            <Link
+              to="#"
               className="text-indigo-600 hover:text-indigo-700 font-semibold"
             >
               Forgot password?
-            </a>
+            </Link>
           </p>
           <p className="text-center text-gray-600">
             Don't have an account?{' '}
-            <a
-              href="/register"
+            <Link
+              to="/register"
               className="text-indigo-600 hover:text-indigo-700 font-semibold"
             >
               Register here
-            </a>
+            </Link>
           </p>
         </div>
       </div>
