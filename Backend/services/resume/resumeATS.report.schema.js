@@ -12,10 +12,10 @@ const stringArray    = z.array(z.string());
  * Scoring breakdown mirrors the resumeATS.score.json weight system.
  * Every criterion holds the points the candidate actually earned (not the max).
  */
-const sectionScoreSchema = (criteriaShape) =>
+const sectionScoreSchema = () =>
     z.object({
         score: z.number().describe("Points earned by the candidate for this section (out of the section maximum)."),
-        criteria: z.object(criteriaShape).describe("Point breakdown per individual criterion within this section."),
+        criteria: z.object().describe("Point breakdown per individual criterion within this section."),
     });
 
 const contactSchema = z.object({

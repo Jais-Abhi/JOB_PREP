@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 import cors from "cors";
 import interviewRouter from "./Routes/interview.route.js";
+import resumeRouter from "./Routes/resume.route.js";
 
 app.use(cors({
     origin : ["http://localhost:5173"],
@@ -26,3 +27,4 @@ app.listen(PORT,()=>{
 
 app.use("/api/user/auth", authRouter);
 app.use("/api/interview",interviewRouter);
+app.use("/api/resume",resumeRouter);

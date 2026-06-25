@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { UploadCloud, File, X, AlertCircle } from 'lucide-react';
+import { UploadCloud, File, X, AlertCircle, CheckCircle, Loader } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card';
+import api from '../../Config/api';
 
 const AtsCheck = () => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState(null);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -53,14 +56,30 @@ const AtsCheck = () => {
     validateAndSetFile(selectedFile);
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
     if (!file) {
       setError('Please upload a file first.');
       return;
     }
-    // TODO: Send file to the backend API
-    console.log('Sending file to backend:', file.name);
-    // Placeholder for future API logic
+    
+    try {
+      setLoading(true);
+      setError('');
+      
+      const formData = new FormData();
+      formData.append('resume', file);
+      
+      const response = await api.post('/api/resume/ats-check', formData);
+      console.log(response)
+      
+      setResults(response.data);
+      setFile(null);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to analyze resume. Please try again.');
+      console.error('API Error:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,7 +97,59 @@ const AtsCheck = () => {
           </CardHeader>
 
           <CardContent className="p-10 space-y-6">
-            {!file ? (
+            {results ? (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-6"
+              >
+                <div className="flex items-center gap-3 bg-green-50 p-6 rounded-2xl border border-green-200">
+                  <CheckCircle size={32} className="text-green-600 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-green-900">Analysis Complete</h3>
+                    <p className="text-sm text-green-700 mt-1">Your resume has been analyzed successfully</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
+                    <p className="text-sm font-medium text-blue-700 mb-2">ATS Score</p>
+                    <p className="text-3xl font-bold text-blue-900">{results.atsScore || results.score}%</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl border border-purple-200">
+                    <p className="text-sm font-medium text-purple-700 mb-2">Match Percentage</p>
+                    <p className="text-3xl font-bold text-purple-900">{results.matchPercentage || '0'}%</p>
+                  </div>
+                </div>
+
+                {results.feedback && (
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h4 className="font-semibold text-slate-900 mb-3">Feedback</h4>
+                    <p className="text-slate-700 text-sm leading-relaxed">{results.feedback}</p>
+                  </div>
+                )}
+
+                {results.missingKeywords && (
+                  <div className="bg-orange-50 p-6 rounded-2xl border border-orange-200">
+                    <h4 className="font-semibold text-orange-900 mb-3">Missing Keywords</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {results.missingKeywords.map((keyword, idx) => (
+                        <span key={idx} className="bg-white px-3 py-1 rounded-full text-sm text-orange-700 border border-orange-200">
+                          {keyword}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <Button 
+                  onClick={() => setResults(null)}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6 rounded-xl font-semibold"
+                >
+                  Analyze Another Resume
+                </Button>
+              </motion.div>
+            ) : !file ? (
               <div
                 className={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-2xl transition-all duration-300 ${
                   isDragging 
@@ -153,14 +224,21 @@ const AtsCheck = () => {
             <Button 
               size="lg" 
               onClick={handleAnalyze} 
-              disabled={!file}
-              className={`w-full md:w-auto px-8 py-6 rounded-xl font-semibold text-base transition-all ${
-                file 
+              disabled={!file || loading}
+              className={`w-full md:w-auto px-8 py-6 rounded-xl font-semibold text-base transition-all flex items-center gap-2 ${
+                file && !loading
                   ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg' 
                   : 'bg-slate-100 text-slate-400'
               }`}
             >
-              Analyze Resume
+              {loading ? (
+                <>
+                  <Loader size={20} className="animate-spin" />
+                  Analyzing...
+                </>
+              ) : (
+                'Analyze Resume'
+              )}
             </Button>
           </CardFooter>
         </Card>
