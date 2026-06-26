@@ -130,6 +130,10 @@ const NavDropdown = ({ label, children }) => {
   const hide = () => {
     timeoutRef.current = setTimeout(() => setOpen(false), 120);
   };
+  const close = () => {
+    clearTimeout(timeoutRef.current);
+    setOpen(false);
+  };
 
   return (
     <div
@@ -149,7 +153,12 @@ const NavDropdown = ({ label, children }) => {
         {open && (
           /* The outer wrapper uses pt-2 to bridge the gap between the button 
              and the visible panel, eliminating the dead zone that triggers onMouseLeave */
-          <div className="absolute left-0 top-full pt-2 z-50" onMouseEnter={show} onMouseLeave={hide}>
+          <div
+            className="absolute left-0 top-full pt-2 z-50"
+            onMouseEnter={show}
+            onMouseLeave={hide}
+            onClick={close}
+          >
             <motion.div
               initial={{ opacity: 0, y: 4, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -303,10 +312,18 @@ const Navbar = () => {
                           <p className="text-xs text-slate-400 truncate">{user.email}</p>
                         </div>
                       )}
-                      <Link to="/account" className="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                      <Link
+                        to="/account"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                      >
                         <User size={14} /> Account
                       </Link>
-                      <Link to="/settings" className="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                      <Link
+                        to="/settings"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition-colors"
+                      >
                         <Settings size={14} /> Settings
                       </Link>
                       <div className="h-px bg-slate-100 my-1" />

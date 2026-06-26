@@ -27,55 +27,35 @@ const contactSchema = z.object({
     linkedin:    nullableString.describe("LinkedIn profile URL."),
     github:      nullableString.describe("GitHub profile URL."),
     portfolio:   nullableString.describe("Personal portfolio or personal website URL."),
-    website:     nullableString.describe("Any other personal or company website link."),
     leetcode:    nullableString.describe("LeetCode profile URL."),
-    codeforces:  nullableString.describe("Codeforces profile URL."),
-    hackerrank:  nullableString.describe("HackerRank profile URL."),
-    codechef:    nullableString.describe("CodeChef profile URL."),
-    behance:     nullableString.describe("Behance portfolio URL (relevant for designers)."),
-    dribbble:    nullableString.describe("Dribbble portfolio URL (relevant for designers)."),
     otherLinks:  stringArray.describe("Any additional profile or social links not covered above."),
 }).describe("All contact and profile-link information extracted from the top section of the resume.");
 
 const skillsSchema = z.object({
-    technical:            stringArray.describe("General technical skills (e.g. REST APIs, Microservices, CI/CD)."),
+        technicalSkills: stringArray.describe("Technical concepts not covered by other categories."),
     programmingLanguages: stringArray.describe("Programming languages listed (e.g. JavaScript, Python, Java)."),
     frameworks:           stringArray.describe("Frameworks explicitly listed (e.g. React, Django, Spring Boot)."),
-    libraries:            stringArray.describe("Libraries explicitly listed (e.g. NumPy, Pandas, Redux)."),
     databases:            stringArray.describe("Databases and data stores (e.g. MySQL, MongoDB, Redis)."),
     cloud:                stringArray.describe("Cloud platforms and services (e.g. AWS, Azure, GCP)."),
     devOps:               stringArray.describe("DevOps / infrastructure tools (e.g. Docker, Kubernetes, Jenkins)."),
     tools:                stringArray.describe("Developer tools and IDEs (e.g. Git, Postman, Jira, Figma)."),
-    operatingSystems:     stringArray.describe("Operating systems mentioned (e.g. Linux, Windows, macOS)."),
     softSkills:           stringArray.describe("Soft / interpersonal skills (e.g. Communication, Leadership)."),
     other:                stringArray.describe("Any skill that does not fit the categories above."),
-}).describe("Complete skills inventory extracted and categorised from the resume.");
+}).describe("Complete skills inventory extracted and categorised from the resume without duplicates.");
 
 const experienceItemSchema = z.object({
     jobTitle:        nullableString.describe("Official job title held in this role."),
     company:         nullableString.describe("Name of the employer or organisation."),
-    employmentType:  nullableString.describe("Employment type: Full-time, Part-time, Contract, Freelance, etc."),
+    employmentType:  nullableString.describe("Employment type: Full-time, Part-time, Contract, Freelance, Internship etc."),
     location:        nullableString.describe("Office location or 'Remote' / 'Hybrid'."),
     startDate:       nullableString.describe("Start date of this role (month and year, e.g. 'Jan 2022')."),
     endDate:         nullableString.describe("End date of this role, or null if currently working here."),
     currentlyWorking:z.boolean().describe("True if this is the candidate's current position."),
     description:     nullableString.describe("Overall role description or summary paragraph."),
-    responsibilities:stringArray.describe("List of primary responsibilities in this role."),
     achievements:    stringArray.describe("Quantified or notable achievements in this role (e.g. 'Reduced load time by 40%')."),
     technologies:    stringArray.describe("Technologies, languages, or tools specifically used in this role."),
-    companyWebsite:  nullableString.describe("Company website URL if mentioned."),
 }).describe("A single work experience entry.");
 
-const internshipItemSchema = z.object({
-    role:        nullableString.describe("Internship role or title."),
-    company:     nullableString.describe("Organisation where the internship was completed."),
-    location:    nullableString.describe("Location of the internship, or 'Remote'."),
-    startDate:   nullableString.describe("Start date of the internship."),
-    endDate:     nullableString.describe("End date of the internship."),
-    description: nullableString.describe("Brief description of the internship responsibilities."),
-    technologies:stringArray.describe("Technologies used during the internship."),
-    achievements:stringArray.describe("Notable achievements or outcomes during the internship."),
-}).describe("A single internship entry.");
 
 const projectItemSchema = z.object({
     title:            nullableString.describe("Project name or title."),
@@ -119,82 +99,11 @@ const achievementItemSchema = z.object({
     date:        nullableString.describe("Date or year the achievement was earned."),
 }).describe("A single standalone achievement entry.");
 
-const awardItemSchema = z.object({
-    title:       nullableString.describe("Name of the award."),
-    issuer:      nullableString.describe("Organisation or person who granted this award."),
-    date:        nullableString.describe("Date or year the award was received."),
-    description: nullableString.describe("Brief description of why the award was given."),
-}).describe("A single award entry.");
-
-const publicationItemSchema = z.object({
-    title:           nullableString.describe("Title of the published paper, article, or book."),
-    publisher:       nullableString.describe("Publisher or journal name."),
-    publicationDate: nullableString.describe("Date the work was published."),
-    url:             nullableString.describe("URL or DOI link to the publication."),
-    description:     nullableString.describe("Brief abstract or summary of the publication."),
-}).describe("A single publication entry.");
-
-const researchItemSchema = z.object({
-    title:        nullableString.describe("Title of the research project or paper."),
-    description:  nullableString.describe("Summary of the research topic and findings."),
-    organization: nullableString.describe("Institution or organisation under which the research was conducted."),
-    date:         nullableString.describe("Duration or date of the research."),
-}).describe("A single research entry.");
-
-const volunteerItemSchema = z.object({
-    organization: nullableString.describe("Organisation where volunteering was done."),
-    role:         nullableString.describe("Role or position held as a volunteer."),
-    duration:     nullableString.describe("Duration or date range of volunteering."),
-    description:  nullableString.describe("Description of contributions and activities."),
-}).describe("A single volunteer experience entry.");
-
-const leadershipItemSchema = z.object({
-    organization: nullableString.describe("Organisation, club, or community where leadership was demonstrated."),
-    role:         nullableString.describe("Leadership role or title (e.g. 'President', 'Tech Lead')."),
-    description:  nullableString.describe("Description of leadership responsibilities and impact."),
-}).describe("A single leadership experience entry.");
-
 const languageItemSchema = z.object({
     language:    nullableString.describe("Human language spoken (e.g. 'English', 'Hindi')."),
     proficiency: nullableString.describe("Proficiency level (e.g. 'Native', 'Fluent', 'Intermediate', 'Basic')."),
 }).describe("A single language proficiency entry.");
 
-const referenceItemSchema = z.object({
-    name:         nullableString.describe("Full name of the reference person."),
-    designation:  nullableString.describe("Job title or designation of the reference person."),
-    organization: nullableString.describe("Organisation where the reference person works."),
-    email:        nullableString.describe("Email address of the reference person."),
-    phone:        nullableString.describe("Phone number of the reference person."),
-}).describe("A single professional reference entry.");
-
-const patentItemSchema = z.object({
-    title:  nullableString.describe("Title of the patent."),
-    number: nullableString.describe("Patent registration number."),
-    date:   nullableString.describe("Date the patent was granted or filed."),
-}).describe("A single patent entry.");
-
-const trainingItemSchema = z.object({
-    title:        nullableString.describe("Title of the training programme."),
-    organization: nullableString.describe("Organisation that delivered the training."),
-    duration:     nullableString.describe("Duration or date range of the training."),
-}).describe("A single training programme entry.");
-
-const workshopItemSchema = z.object({
-    title:        nullableString.describe("Title of the workshop or seminar."),
-    organization: nullableString.describe("Organisation that conducted the workshop."),
-    date:         nullableString.describe("Date or year of the workshop."),
-}).describe("A single workshop entry.");
-
-const conferenceItemSchema = z.object({
-    title:        nullableString.describe("Name of the conference or event."),
-    organization: nullableString.describe("Organising body of the conference."),
-    date:         nullableString.describe("Date or year the conference took place."),
-}).describe("A single conference participation entry.");
-
-const socialProfileItemSchema = z.object({
-    platform: nullableString.describe("Social platform name (e.g. 'Twitter', 'YouTube', 'Medium')."),
-    url:      nullableString.describe("Full URL to the social profile."),
-}).describe("A single additional social or online profile link.");
 
 const customSectionItemSchema = z.object({
     title:   nullableString.describe("Title of this custom or non-standard resume section."),
@@ -250,7 +159,7 @@ const scoreBreakdownSchema = z.object({
             actionVerbs:          z.number().min(0).max(3).describe("Award up to 3 points for consistently starting bullet points with strong action verbs (e.g., 'Developed', 'Implemented', 'Led'). Award fewer points for weak verbs or passive voice."),
             quantifiedAchievements:z.number().min(0).max(4).describe("Award higher scores for bullet points that include quantified, data-backed achievements with measurable impact (e.g., 'Reduced load time by 40%', 'Increased user engagement by 25%'). Award fewer points for generic descriptions without metrics."),
         }).describe("Experience section score (0–15). Award higher scores for resumes with clear job titles, company names, dates, action verbs, and especially quantified achievements with measurable impact."),
-
+        
         projects: sectionScoreSchema({
             projectTitle:      z.number().min(0).max(2).describe("Award up to 2 points for each project having a clear, descriptive title. Award fewer points for unclear or missing titles."),
             projectDescription:z.number().min(0).max(3).describe("Award up to 3 points for clear, high-quality descriptions explaining what the project does and the problem it solves. Award fewer points for vague or incomplete descriptions."),
@@ -302,57 +211,59 @@ const resumeATSReportSchema = z.object({
         .describe("A user-friendly message explaining why processing failed (e.g. 'The uploaded document does not appear to be a resume.'). Null when success is true."),
 
     // ── Extracted resume data ─────────────────────────────────────────────────
-    contact: contactSchema,
+    resume: z.object({
 
-    professionalSummary: nullableString
-        .describe("The professional summary or profile statement from the resume, verbatim or lightly normalised."),
+        contact: contactSchema,
 
-    objective: nullableString
-        .describe("The career objective statement from the resume, if separate from the professional summary."),
+        professionalSummary: nullableString
+            .describe("The professional summary or profile statement from the resume, verbatim or lightly normalised."),
 
-    skills:       skillsSchema,
-    experience:   z.array(experienceItemSchema).describe("All work experience entries extracted from the resume, ordered most-recent first."),
-    internships:  z.array(internshipItemSchema).describe("All internship entries extracted from the resume."),
-    projects:     z.array(projectItemSchema).describe("All personal, academic, or professional project entries extracted from the resume."),
-    education:    z.array(educationItemSchema).describe("All education entries extracted from the resume, ordered most-recent first."),
-    certifications:       z.array(certificationItemSchema).describe("All certifications and online course completions."),
-    achievements:         z.array(achievementItemSchema).describe("All standalone achievement or accomplishment entries."),
-    awards:               z.array(awardItemSchema).describe("All award entries listed on the resume."),
-    publications:         z.array(publicationItemSchema).describe("All published works: papers, articles, blogs, or books."),
-    research:             z.array(researchItemSchema).describe("All research project entries."),
-    volunteerExperience:  z.array(volunteerItemSchema).describe("All volunteer or community service entries."),
-    leadership:           z.array(leadershipItemSchema).describe("All leadership or club/society role entries."),
-    extracurricularActivities: z.array(z.object({
-        title:       nullableString.describe("Title of the extracurricular activity."),
-        description: nullableString.describe("Brief description of the activity and the candidate's involvement."),
-    })).describe("Extracurricular activities listed on the resume."),
-    languages:   z.array(languageItemSchema).describe("Human languages and proficiency levels listed."),
-    interests:   stringArray.describe("Personal interests or hobbies listed as a short array of strings."),
-    hobbies:     stringArray.describe("Hobbies listed explicitly on the resume."),
-    references:  z.array(referenceItemSchema).describe("Professional references listed on the resume."),
-    patents:     z.array(patentItemSchema).describe("Patents filed or granted."),
-    training:    z.array(trainingItemSchema).describe("Formal training programmes attended."),
-    workshops:   z.array(workshopItemSchema).describe("Workshops or seminars attended."),
-    conferences: z.array(conferenceItemSchema).describe("Conferences or events attended or presented at."),
-    socialProfiles: z.array(socialProfileItemSchema).describe("Additional social or online profiles beyond those in the contact section."),
-    customSections: z.array(customSectionItemSchema).describe("Any non-standard or custom sections the candidate added to their resume."),
-    other: z.object({
-        additionalInformation: nullableString.describe("Miscellaneous information that does not fit any other section."),
-        notes:                 nullableString.describe("Internal parser notes about ambiguous or unclear resume content."),
-    }).describe("A catch-all section for any additional or unclassified resume content."),
+        objective: nullableString
+            .describe("The career objective statement from the resume, if separate from the professional summary."),
 
-    // ── ATS score breakdown ───────────────────────────────────────────────────
-    scoreBreakdown: scoreBreakdownSchema,
+        skills:       skillsSchema,
+        experience:   z.array(experienceItemSchema).describe("All work experience entries extracted from the resume, ordered most-recent first."),
+        projects:     z.array(projectItemSchema).describe("All personal, academic, or professional project entries extracted from the resume."),
+        education:    z.array(educationItemSchema).describe("All education entries extracted from the resume, ordered most-recent first."),
+        certifications:       z.array(certificationItemSchema).describe("All certifications and online course completions."),
+        achievements:         z.array(achievementItemSchema).describe("All standalone achievement or accomplishment entries."),
+        extracurricularActivities: z.array(z.object({
+            title:       nullableString.describe("Title of the extracurricular activity."),
+            description: nullableString.describe("Brief description of the activity and the candidate's involvement."),
+        })).describe("Extracurricular activities listed on the resume."),
+        languages:   z.array(languageItemSchema).describe("Human languages and proficiency levels listed."),
+        interests:   stringArray.describe("Personal interests or hobbies listed as a short array of strings."),
+        hobbies:     stringArray.describe("Hobbies listed explicitly on the resume."),
 
-    // ── Qualitative feedback ──────────────────────────────────────────────────
-    strengths: z.array(strengthSchema)
-        .describe("A list of specific strengths and positive observations about the resume."),
+        customSections: z.array(customSectionItemSchema).describe("Any non-standard or custom sections the candidate added to their resume."),
+        other: z.object({
+            additionalInformation: nullableString.describe("Miscellaneous information that does not fit any other section."),
+            notes:                 nullableString.describe("Internal parser notes about ambiguous or unclear resume content."),
+        }).describe("A catch-all section for any additional or unclassified resume content."),
 
-    improvements: z.array(improvementSuggestionSchema)
-        .describe("A prioritised list of actionable improvement suggestions to increase the ATS score."),
+    }).describe("All data extracted directly from the uploaded resume."),
 
-    overallFeedback: z.string().nullable()
-        .describe("A concise overall summary of the resume quality, ATS readiness, and top 2–3 priorities for improvement. Null when success is false."),
+    // ── AI-generated analysis ─────────────────────────────────────────────────
+    report: z.object({
+
+        // ── ATS score breakdown ───────────────────────────────────────────────────
+        scoreBreakdown: scoreBreakdownSchema,
+
+        // ── Qualitative feedback ──────────────────────────────────────────────────
+        feedback: z.object({
+
+            strengths: z.array(strengthSchema)
+                .describe("A list of specific strengths and positive observations about the resume."),
+
+            improvements: z.array(improvementSuggestionSchema)
+                .describe("A prioritised list of actionable improvement suggestions to increase the ATS score."),
+
+            overallFeedback: z.string().nullable()
+                .describe("A concise overall summary of the resume quality, ATS readiness, and top 2–3 priorities for improvement. Null when success is false."),
+
+        }).describe("Qualitative feedback and improvement suggestions generated by the AI."),
+
+    }).describe("AI-generated ATS analysis report."),
 
 });
 
