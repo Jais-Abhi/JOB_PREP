@@ -70,7 +70,8 @@ const AtsCheck = () => {
       formData.append('resume', file);
       
       const response = await api.post('/api/resume/ats-check', formData);
-      console.log(response)
+      console.log(response.data)
+      console.log(response.data.report.scoreBreakdown.sections.contactInformation.criteria)
       
       setResults(response.data);
       setFile(null);

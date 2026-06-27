@@ -32,7 +32,7 @@ const contactSchema = z.object({
 }).describe("All contact and profile-link information extracted from the top section of the resume.");
 
 const skillsSchema = z.object({
-        technicalSkills: stringArray.describe("Technical concepts not covered by other categories."),
+    technicalSkills: stringArray.describe("Technical concepts not covered by other categories."),
     programmingLanguages: stringArray.describe("Programming languages listed (e.g. JavaScript, Python, Java)."),
     frameworks:           stringArray.describe("Frameworks explicitly listed (e.g. React, Django, Spring Boot)."),
     databases:            stringArray.describe("Databases and data stores (e.g. MySQL, MongoDB, Redis)."),
