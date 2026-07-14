@@ -13,6 +13,7 @@ import ResumeTemplates from './Features/resume-studio/ResumeTemplates'
 import History from './Features/resume-studio/History'
 import JobPreperation from './Features/career-lab/job-preperation/JobPreperation'
 import PastAnalysis from './Features/career-lab/job-preperation/PastAnalysis'
+import InterviewReport from './Features/career-lab/job-preperation/InterviewReport'
 import SkillRoadmap from './Features/career-lab/roadmaps/SkillRoadmap'
 import PlacementRoadmap from './Features/career-lab/roadmaps/PlacementRoadmap'
 import DsaTracker from './Features/career-lab/roadmaps/DsaTracker'
@@ -71,6 +72,8 @@ const App = () => {
 
           {/* Career Tools – Job Preparation */}
           <Route path='/job-preparation' element={<JobPreperation />} />
+          <Route path='/job-preperation/report/:id' element={<InterviewReport />} />
+          <Route path='/job-preparation/report/:id' element={<InterviewReport />} />
           <Route path='/past-analysis' element={<PastAnalysis />} />
 
           {/* Career Tools – Roadmaps */}

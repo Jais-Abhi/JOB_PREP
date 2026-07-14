@@ -99,342 +99,168 @@ const AtsReport = () => {
   const strengths = report?.feedback?.strengths ?? [];
   const improvements = report?.feedback?.improvements ?? [];
   const overallFeedback = report?.feedback?.overallFeedback ?? '';
-
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-6 flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
-              ATS Report
-            </p>
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">
-              Resume analysis result
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500 sm:text-base">
-              View your score, strengths, and recommendations directly from the latest ATS report.
-            </p>
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-500">ATS Report</p>
+            <h1 className="mt-1 text-2xl font-semibold text-slate-900">Resume analysis result</h1>
+            <p className="mt-1 text-sm text-slate-500">Score breakdown and prioritized improvements from the latest scan.</p>
           </div>
-          <Button
-            onClick={() => navigate('/resume/ats-check')}
-            className="inline-flex items-center gap-2 bg-slate-900 text-white hover:bg-slate-800"
-          >
-            <ArrowLeft size={16} /> Back to Analyzer
+          <Button onClick={() => navigate('/resume/ats-check')} className="text-sm bg-slate-900 text-white px-3 py-2">
+            <ArrowLeft size={14} /> Back
           </Button>
         </div>
 
         {loading ? (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
-          >
-            <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-              <SkeletonBlock className="h-72" />
-              <div className="space-y-6">
-                <SkeletonBlock className="h-32" />
-                <SkeletonBlock className="h-32" />
-              </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-3">
+              <SkeletonBlock className="h-48" />
+              <SkeletonBlock className="h-48" />
+              <SkeletonBlock className="h-48" />
             </div>
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <SkeletonBlock key={index} className="h-40" />
+            <div className="grid gap-4 md:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonBlock key={i} className="h-28" />
               ))}
             </div>
-            <div className="grid gap-6 md:grid-cols-2">
-              <SkeletonBlock className="h-56" />
-              <SkeletonBlock className="h-56" />
-            </div>
-            <SkeletonBlock className="h-44" />
           </motion.div>
         ) : error ? (
           <div className="mx-auto max-w-2xl">
-            <Card className="border border-rose-100 bg-white shadow-xl">
-              <CardContent className="p-8 text-center">
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-3xl bg-rose-50 text-rose-700">
-                  <AlertTriangle size={28} />
+            <Card className="border border-rose-100 bg-white shadow">
+              <CardContent className="p-6 text-center">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-700">
+                  <AlertTriangle size={20} />
                 </div>
-                <h2 className="text-2xl font-semibold text-slate-900">Report not found</h2>
-                <p className="mt-3 text-sm leading-6 text-slate-500">
-                  {error}
-                </p>
-                <Button
-                  onClick={fetchReport}
-                  className="mt-8 inline-flex items-center justify-center gap-2 bg-slate-900 text-white hover:bg-slate-800"
-                >
-                  <RefreshCcw size={16} /> Retry
+                <h2 className="text-lg font-medium text-slate-900">Report not found</h2>
+                <p className="mt-2 text-sm text-slate-500">{error}</p>
+                <Button onClick={fetchReport} className="mt-4 inline-flex items-center gap-2 bg-slate-900 text-white px-3 py-2">
+                  <RefreshCcw size={14} /> Retry
                 </Button>
               </CardContent>
             </Card>
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-8"
-          >
-            <div className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-              <Card className="overflow-hidden border border-slate-200 shadow-xl">
-                <CardContent className="p-8">
-                  <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid gap-4 md:grid-cols-3">
+            {/* Left column: overall score + breakdown */}
+            <div className="space-y-4">
+              <Card className="border border-slate-200 bg-white shadow-sm">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">
-                        Overall ATS Score
-                      </p>
-                      <h2 className="mt-4 text-5xl font-extrabold text-slate-900">
-                        {totalScore}
-                        <span className="ml-2 text-lg font-medium text-slate-500">/ 100</span>
-                      </h2>
-                      <div className={`mt-4 inline-flex items-center gap-3 rounded-full border px-4 py-2 text-sm font-medium ${status.tone}`}>
-                        <Sparkles size={16} className="text-current" />
-                        {status.label}
+                      <p className="text-xs text-slate-500 uppercase">Overall ATS Score</p>
+                      <div className="mt-2 flex items-center gap-3">
+                        <h2 className="text-3xl font-bold text-slate-900">{totalScore}</h2>
+                        <span className="text-sm text-slate-500">/ 100</span>
                       </div>
-                      <p className="mt-4 text-sm text-slate-500">
-                        Analysis completed on {formattedDate}
-                      </p>
+                      <p className="mt-1 text-xs text-slate-500">Completed on {formattedDate}</p>
                     </div>
-
-                    <div className="relative mx-auto flex h-48 w-48 items-center justify-center rounded-full bg-slate-100 shadow-sm">
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-slate-100 to-slate-50" />
-                      <div className="relative flex h-36 w-36 items-center justify-center rounded-full bg-white shadow-lg">
-                        <div className="text-center">
-                          <p className="text-sm uppercase tracking-[0.24em] text-slate-400">Score</p>
-                          <p className="mt-2 text-5xl font-semibold text-slate-900">{totalScore}</p>
-                          <p className="text-sm text-slate-500">out of 100</p>
-                        </div>
-                      </div>
-                      <svg className="absolute h-full w-full" viewBox="0 0 140 140">
-                        <circle cx="70" cy="70" r="64" className="stroke-slate-200" strokeWidth="12" fill="none" />
-                        <circle
-                          cx="70"
-                          cy="70"
-                          r="64"
-                          className="stroke-slate-900/80"
-                          strokeWidth="12"
-                          strokeLinecap="round"
-                          fill="none"
-                          strokeDasharray={Math.PI * 2 * 64}
-                          strokeDashoffset={Math.PI * 2 * 64 * (1 - totalScore / 100)}
-                          transform="rotate(-90 70 70)"
-                        />
+                    <div className="flex items-center justify-center">
+                      <svg className="h-28 w-28" viewBox="0 0 140 140">
+                        <circle cx="70" cy="70" r="60" className="stroke-slate-200" strokeWidth="10" fill="none" />
+                        <circle cx="70" cy="70" r="60" className="stroke-slate-900/80" strokeWidth="10" strokeLinecap="round" fill="none"
+                          strokeDasharray={Math.PI * 2 * 60}
+                          strokeDashoffset={Math.PI * 2 * 60 * (1 - totalScore / 100)} transform="rotate(-90 70 70)" />
                       </svg>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <div className="grid gap-6">
-                <Card className="border border-slate-200 bg-white shadow-xl">
-                  <CardHeader className="px-6 py-6">
-                    <CardTitle className="text-base font-semibold text-slate-900">Summary</CardTitle>
-                    <CardDescription className="mt-1 text-sm text-slate-500">
-                      A concise snapshot of what your resume does well and where it can improve.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4 px-6 pb-6">
-                    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-                      <div className="flex items-center gap-3 text-slate-700">
-                        <CircleDollarSign size={20} className="text-slate-500" />
-                        <div>
-                          <p className="text-sm font-medium text-slate-900">ATS score context</p>
-                          <p className="text-sm text-slate-500">
-                            Your score is computed from formatting, structure, skills, experience, and readability.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between rounded-3xl border border-slate-200 bg-white p-4">
-                        <div>
-                          <p className="text-sm text-slate-500">Formatting</p>
-                          <p className="text-sm font-medium text-slate-900">
-                            {Math.round(((sections.atsFormatting ?? 0) / sectionMax) * 100)}%
-                          </p>
-                        </div>
-                        <div className="h-2 w-28 overflow-hidden rounded-full bg-slate-100">
-                          <div
-                            className="h-full rounded-full bg-slate-900"
-                            style={{ width: `${Math.min(100, Math.max(0, ((sections.atsFormatting ?? 0) / sectionMax) * 100))}%` }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between rounded-3xl border border-slate-200 bg-white p-4">
-                        <div>
-                          <p className="text-sm text-slate-500">Keywords & skills</p>
-                          <p className="text-sm font-medium text-slate-900">
-                            {Math.round(((sections.skills ?? 0) / sectionMax) * 100)}%
-                          </p>
-                        </div>
-                        <div className="h-2 w-28 overflow-hidden rounded-full bg-slate-100">
-                          <div
-                            className="h-full rounded-full bg-slate-900"
-                            style={{ width: `${Math.min(100, Math.max(0, ((sections.skills ?? 0) / sectionMax) * 100))}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="border border-slate-200 bg-white shadow-xl">
-                  <CardHeader className="px-6 py-6">
-                    <CardTitle className="text-base font-semibold text-slate-900">Details</CardTitle>
-                    <CardDescription className="mt-1 text-sm text-slate-500">
-                      See how each resume section contributed to the final ATS score.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4 px-6 pb-6">
-                    <div className="flex items-center justify-between rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                      <div>
-                        <p className="text-sm text-slate-500">Report ID</p>
-                        <p className="text-sm font-medium text-slate-900">{reportData?._id}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-slate-500">Created</p>
-                        <p className="text-sm font-medium text-slate-900">{formattedDate}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-3">
-              {Object.entries(sections).map(([key, value]) => {
-                const Icon = sectionIcon(key);
-                const label = normalizedLabel(key);
-                const percent = Math.round((value / sectionMax) * 100);
-
-                return (
-                  <motion.div
-                    key={key}
-                    whileHover={{ y: -4 }}
-                    transition={{ duration: 0.2 }}
-                    className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">
-                        <Icon size={20} />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">{label}</p>
-                        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Score</p>
-                      </div>
-                    </div>
-                    <div className="mt-6 flex items-center justify-between gap-4">
-                      <p className="text-3xl font-semibold text-slate-900">{value}</p>
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-                        {percent}%
-                      </span>
-                    </div>
-                    <div className="mt-4">
-                      <Progress value={Math.min(100, Math.max(0, percent))} />
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-2">
-              <Card className="border border-slate-200 bg-white shadow-xl">
-                <CardHeader className="px-6 py-6">
-                  <CardTitle className="text-base font-semibold text-slate-900">Resume Strengths</CardTitle>
-                  <CardDescription className="mt-1 text-sm text-slate-500">
-                    Highlights for what your resume already does well.
-                  </CardDescription>
+              <Card className="border border-slate-200 bg-white shadow-sm">
+                <CardHeader className="px-4 py-3">
+                  <CardTitle className="text-sm font-semibold text-slate-900">Score Breakdown</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 px-6 pb-6">
-                  {strengths.length > 0 ? (
-                    strengths.map((item, index) => (
-                      <motion.div
-                        key={`${item.section}-${index}`}
-                        whileHover={{ scale: 1.01 }}
-                        transition={{ duration: 0.2 }}
-                        className="rounded-3xl border border-slate-200 bg-slate-50 p-5"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
-                            <CheckCircle2 size={18} />
-                          </div>
-                          <div>
-                            <p className="text-sm font-semibold text-slate-900">{item.section}</p>
-                            <p className="mt-1 text-sm leading-6 text-slate-600">{item.observation}</p>
+                <CardContent className="p-4 space-y-3">
+                  {Object.entries(sections).map(([key, value]) => {
+                    const label = normalizedLabel(key);
+                    const percent = Math.round((value / sectionMax) * 100);
+                    return (
+                      <div key={key} className="flex items-center justify-between gap-3">
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-slate-900">{label}</p>
+                          <p className="text-xs text-slate-500">{value} pts</p>
+                        </div>
+                        <div className="w-24">
+                          <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                            <div className="h-full bg-slate-900" style={{ width: `${Math.min(100, Math.max(0, percent))}%` }} />
                           </div>
                         </div>
-                      </motion.div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-slate-500">No strengths were identified from this report.</p>
-                  )}
+                      </div>
+                    );
+                  })}
                 </CardContent>
               </Card>
+            </div>
 
-              <Card className="border border-slate-200 bg-white shadow-xl">
-                <CardHeader className="px-6 py-6">
-                  <CardTitle className="text-base font-semibold text-slate-900">Recommended Improvements</CardTitle>
-                  <CardDescription className="mt-1 text-sm text-slate-500">
-                    Priority recommendations to improve your resume and ATS performance.
-                  </CardDescription>
+            {/* Middle column: improvements */}
+            <div className="space-y-4">
+              <Card className="border border-slate-200 bg-white shadow-sm">
+                <CardHeader className="px-4 py-3">
+                  <CardTitle className="text-sm font-semibold text-slate-900">Recommended Improvements</CardTitle>
+                  <CardDescription className="mt-1 text-xs text-slate-500">Prioritized fixes to improve ATS match.</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4 px-6 pb-6">
+                <CardContent className="p-4 space-y-3">
                   {improvements.length > 0 ? (
-                    improvements.map((item, index) => (
-                      <motion.div
-                        key={`${item.section}-${index}`}
-                        whileHover={{ scale: 1.01 }}
-                        transition={{ duration: 0.2 }}
-                        className="rounded-3xl border border-slate-200 bg-slate-50 p-5"
-                      >
-                        <div className="flex flex-col gap-3">
-                          <div className="flex items-center justify-between gap-3">
+                    improvements.map((item, idx) => {
+                      const impactClass = item.impact === 'high' ? 'bg-rose-100 text-rose-700' : item.impact === 'medium' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700';
+                      return (
+                        <div key={`${item.section}-${idx}`} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                          <div className="flex items-start justify-between gap-3">
                             <div>
                               <p className="text-sm font-semibold text-slate-900">{item.section}</p>
-                              <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
-                                Impact: {item.impact?.charAt(0).toUpperCase() + item.impact?.slice(1)}
-                              </p>
+                              <p className="mt-1 text-xs text-slate-600">{item.issue}</p>
                             </div>
-                            <div className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase text-slate-600">
-                              {item.impact}
-                            </div>
+                            <div className={`rounded-full px-2 py-1 text-xs font-semibold uppercase ${impactClass}`}>{item.impact}</div>
                           </div>
-                          <div>
-                            <p className="text-sm font-medium text-slate-900">Issue</p>
-                            <p className="mt-1 text-sm leading-6 text-slate-600">{item.issue}</p>
-                          </div>
-                          <div className="rounded-3xl border border-slate-200 bg-white p-4">
-                            <p className="text-sm font-semibold text-slate-900">Suggestion</p>
-                            <p className="mt-1 text-sm leading-6 text-slate-600">{item.suggestion}</p>
+                          <div className="mt-3 rounded-md bg-white border border-slate-200 p-2">
+                            <p className="text-sm text-slate-700">{item.suggestion}</p>
                           </div>
                         </div>
-                      </motion.div>
-                    ))
+                      );
+                    })
                   ) : (
-                    <p className="text-sm text-slate-500">No improvement suggestions are available for this report.</p>
+                    <p className="text-sm text-slate-500">No improvements available.</p>
                   )}
                 </CardContent>
               </Card>
             </div>
 
-            <Card className="border border-slate-200 bg-white shadow-xl">
-              <CardHeader className="px-6 py-6">
-                <CardTitle className="text-base font-semibold text-slate-900">Overall Feedback</CardTitle>
-                <CardDescription className="mt-1 text-sm text-slate-500">
-                  The final evaluation from the ATS report.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="px-6 pb-8">
-                <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8 text-slate-700 shadow-sm">
-                  <div className="mb-4 flex items-center gap-3 text-slate-900">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-slate-900 text-white">
-                      <FileSignature size={20} />
-                    </div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
-                      Final evaluation
-                    </p>
-                  </div>
-                  <p className="text-base leading-8 text-slate-700">{overallFeedback}</p>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Right column: strengths + overall feedback */}
+            <div className="space-y-4">
+              <Card className="border border-slate-200 bg-white shadow-sm">
+                <CardHeader className="px-4 py-3">
+                  <CardTitle className="text-sm font-semibold text-slate-900">Resume Strengths</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 space-y-3">
+                  {strengths.length > 0 ? (
+                    strengths.map((s, i) => (
+                      <div key={`${s.section}-${i}`} className="flex items-start gap-3 rounded-md bg-slate-50 p-2 border border-slate-100">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-md bg-emerald-100 text-emerald-700">
+                          <CheckCircle2 size={14} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-slate-900">{s.section}</p>
+                          <p className="text-xs text-slate-600">{s.observation}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-slate-500">No strengths identified.</p>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card className="border border-slate-200 bg-white shadow-sm">
+                <CardHeader className="px-4 py-3">
+                  <CardTitle className="text-sm font-semibold text-slate-900">Overall Feedback</CardTitle>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <p className="text-sm text-slate-700">{overallFeedback}</p>
+                </CardContent>
+              </Card>
+            </div>
           </motion.div>
         )}
       </div>

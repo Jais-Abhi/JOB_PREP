@@ -43,11 +43,7 @@ const generateReportController = async (req, res) => {
             { $push: { interviewReports: interviewReport._id } }
         )
 
-        res.status(201).json({ 
-            success: true, 
-            message: "Interview report generated and saved successfully.",
-            interviewReport,
-        });
+        res.status(201).json({success : true, message : "Report generated successfully", reportId: interviewReport._id});
 
     } catch (error) {
         console.log("Error extracting data:", error);
@@ -55,4 +51,18 @@ const generateReportController = async (req, res) => {
     }
 }
 
-export {generateReportController}
+const getReportController = async (req, res) => {
+    try {
+        const { _id } = req.params;
+        const report = await InterviewReport.findById(_id).select('-resume -__v').lean();
+        if (!report) {
+            return res.status(404).json({ success: false, message: "Report not found" });
+        }
+        res.status(200).json({ success: true, report });
+    } catch (error) {
+        console.log("Error fetching report:", error);
+        res.status(500).json({ success: false, message: "Failed to fetch report" });
+    }
+}
+
+export {generateReportController , getReportController}

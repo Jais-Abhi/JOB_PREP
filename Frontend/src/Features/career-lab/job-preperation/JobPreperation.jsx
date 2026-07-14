@@ -228,8 +228,8 @@ const JobPreperation = () => {
       
       // Make the actual API call to the backend
       const response = await api.post('/api/interview/generate-report', formData);
-      console.log(response.data.interviewReport.success)
-      console.log('Success: Report generated!', response.data.interviewReport);
+      // console.log(response.data.interviewReport.success)
+      console.log('Success: Report generated!', response.data);
             
     } catch (error) {
       console.error('Error submitting form:', error);
