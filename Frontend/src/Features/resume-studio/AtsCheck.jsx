@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { motion } from 'framer-motion';
 import { UploadCloud, File, X, AlertCircle, CheckCircle, Loader } from 'lucide-react';
 import { Button } from '../../components/ui/button';
@@ -56,6 +57,8 @@ const AtsCheck = () => {
     validateAndSetFile(selectedFile);
   };
 
+  const navigate = useNavigate();
+
   const handleAnalyze = async () => {
     if (!file) {
       setError('Please upload a file first.');
@@ -70,9 +73,13 @@ const AtsCheck = () => {
       formData.append('resume', file);
       
       const response = await api.post('/api/resume/ats-check', formData);
-      console.log(response.data)
-      console.log(response.data.report.scoreBreakdown.sections.contactInformation.criteria)
-      
+      const reportId = response.data?.reportId || response.data?.report?._id;
+
+      if (reportId) {
+        navigate(`/resume/ats-check/report/${reportId}`);
+        return;
+      }
+
       setResults(response.data);
       setFile(null);
     } catch (err) {

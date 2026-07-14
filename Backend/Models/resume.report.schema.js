@@ -1,20 +1,40 @@
 import mongoose from "mongoose"
 
 
-// sections : {
-    //     atsFormatting
-    //     contactInformation
-    //     education
-    //     experience
-    //     grammarAndReadability
-    //     projects
-    //     resumeStructure
-    //     skills
-    // },
-
 const scoreBreakdownSchema = new mongoose.Schema({
     sections : {
-        type : Object,
+        atsFormatting : {
+            type : Number,
+            required : [true," ATS Formatting Score is required "],
+        },
+        contactInformation : {
+            type : Number,
+            required : [true," Contact Information Score is required "],
+        },
+        education : {
+            type : Number,
+            required : [true," Education Score is required "],
+        },
+        experience : {
+            type : Number,
+            required : [true," Experience Score is required "],
+        },
+        grammarAndReadability : {
+            type : Number,
+            required : [true," Grammar and Readability Score is required "],
+        },
+        projects : {
+            type : Number,
+            required : [true," Projects Score is required "],
+        },
+        resumeStructure : {
+            type : Number,
+            required : [true," Resume Structure Score is required "],
+        },
+        skills : {
+            type : Number,
+            required : [true," Skills Score is required "],
+        }
 
     },
     totalScore:{
@@ -23,34 +43,65 @@ const scoreBreakdownSchema = new mongoose.Schema({
         min : 0,
         max : 100
     },
-})
+},{_id : false})
+
+const improvementSchema = new mongoose.Schema({
+    section : {
+        type : String,
+        required : [true,"Section is required"]
+    },
+    impact : {
+        type : String,
+        required : [true,"Impact is required"]
+    },
+    issue : {
+        type : String,
+        required : [true,"Issue is required"]
+    },
+    suggestion : {
+        type : String,
+        required : [true,"Suggestion is required"]
+    }
+},{_id : false})
+
+const strengthSchema = new mongoose.Schema({
+    section : {
+        type : String,
+        required : [true,"Section is required"]
+    },
+    observation : {
+        type : String,
+        required : [true,"Observation is required"]
+    }
+},{_id : false })
 
 const feedbackSchema = new mongoose.Schema({
     improvements : {
-        type : Array,
-        required : [true," Suggestions are required "],
-        default : []
+        type: [improvementSchema],
+        default: []
     },
     overallFeedback : {
         type : String,
         required : [true,"feedback is required"]
     },
     strengths:{
-        type : Array,
-        required : [true," Strengths are required "],
+        type : [strengthSchema],
         default : []
     }
-})
+},{_id : false})
 
-const resumeReportSchema = new mongoose.Schema({
+const reportSchema = new mongoose.Schema({
     feedback : feedbackSchema,
     scoreBreakdown: scoreBreakdownSchema
-})
+},{_id : false})
 
 
 
-
-const resumeSchema  = new mongoose.Schema({
+const resumeReportSchema  = new mongoose.Schema({
+    userId : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : "User",
+    },
     success:{
         type : Boolean,
         required : [true," Success is required "],
@@ -59,8 +110,15 @@ const resumeSchema  = new mongoose.Schema({
         type : String,
         // required : [true," Message is required "],
     },
-    report: resumeReportSchema,
-    // resume : ""
-})
+    report: reportSchema,
+    resume : {
+        type: mongoose.Schema.Types.Mixed,
+        required: true
+    }
+},{timestamps : true})
 
-export default resumeSchema
+resumeReportSchema.index({ userId: 1 });
+
+const ResumeReport = mongoose.model("ResumeReport",resumeReportSchema)
+
+export default ResumeReport

@@ -7,6 +7,7 @@ import Register from './Features/Auth/Pages/Register'
 import Login from './Features/Auth/Pages/Login'
 import Dashboard from './Features/dashboard/Dashboard'
 import AtsCheck from './Features/resume-studio/AtsCheck'
+import AtsReport from './Features/resume-studio/AtsReport'
 import CreateResume from './Features/resume-studio/CreateResume'
 import ResumeTemplates from './Features/resume-studio/ResumeTemplates'
 import History from './Features/resume-studio/History'
@@ -63,6 +64,7 @@ const App = () => {
           {/* Resume Studio */}
           <Route path='/resume' element={<Resume />} />
           <Route path='/resume/ats-check' element={<AtsCheck />} />
+          <Route path='/resume/ats-check/report/:id' element={<AtsReport />} />
           <Route path='/resume/create' element={<CreateResume />} />
           <Route path='/resume/templates' element={<ResumeTemplates />} />
           <Route path='/resume/history' element={<History />} />
