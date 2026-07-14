@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
 import { 
@@ -34,6 +35,8 @@ const JobPreperation = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+
+  const navigate = useNavigate();
 
   // Refs for Animations
   const mainCardRef = useRef(null);
@@ -228,8 +231,15 @@ const JobPreperation = () => {
       
       // Make the actual API call to the backend
       const response = await api.post('/api/interview/generate-report', formData);
-      // console.log(response.data.interviewReport.success)
       console.log('Success: Report generated!', response.data);
+      const reportId = response.data?.reportId || response.data?.report?._id || response.data?.data?.reportId;
+      if (reportId) {
+        toast.success('Report generated — opening report');
+        // navigate to the report page
+        navigate(`/job-preperation/report/${reportId}`);
+        return;
+      }
+      toast.success('Report generated');
             
     } catch (error) {
       console.error('Error submitting form:', error);
