@@ -6,7 +6,7 @@ const ai = new GoogleGenAI({
 });
 
 
-const generateReport = async ({prompt,reportSchema}) => {
+const generateReport = async ({prompt,reportSchema,systemInstructions}) => {
     try {
         
         // Convert to JSON Schema using Zod v4's native toJSONSchema()
@@ -15,14 +15,15 @@ const generateReport = async ({prompt,reportSchema}) => {
         // Strip the '$schema' key to prevent the SDK from stripping responseSchema
         const { $schema, ...responseSchema } = rawSchema;
         const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
+            // model: "gemini-2.5-flash",
             // model: "gemini-2.5-flash-lite",
-            // model: "gemini-3.1-flash-lite",
+            model: "gemini-3.1-flash-lite",
             
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
                 responseSchema: responseSchema,
+                systemInstructions: systemInstructions,
             }
         });
         const parsedJson = JSON.parse(response.text);

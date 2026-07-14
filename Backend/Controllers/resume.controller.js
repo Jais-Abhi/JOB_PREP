@@ -4,7 +4,7 @@ import generateResumeScoreReport from "../services/resume/generateATS.report.js"
 const generateResumeScoreController = async (req, res) => {
     try{
         console.log("controller ats resume")
-        console.log(req.file,req.file.buffer);
+        // console.log(req.file,req.file.buffer);
 
         let resumeText = ""
         if (req.file && req.file.buffer) {
@@ -13,7 +13,7 @@ const generateResumeScoreController = async (req, res) => {
                     resumeText = pdfData.text;
         
                 }
-                console.log(resumeText)
+                // console.log(resumeText)
         const report = await generateResumeScoreReport({ resume: resumeText });
         res.status(200).json(report);
 

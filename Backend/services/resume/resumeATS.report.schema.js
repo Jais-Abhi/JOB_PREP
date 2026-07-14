@@ -12,12 +12,6 @@ const stringArray    = z.array(z.string());
  * Scoring breakdown mirrors the resumeATS.score.json weight system.
  * Every criterion holds the points the candidate actually earned (not the max).
  */
-const sectionScoreSchema = () =>
-    z.object({
-        score: z.number().describe("Points earned by the candidate for this section (out of the section maximum)."),
-        criteria: z.object().describe("Point breakdown per individual criterion within this section."),
-    });
-
 const contactSchema = z.object({
     fullName:    nullableString.describe("Candidate's full name as written on the resume."),
     headline:    nullableString.describe("Professional headline or tagline directly below the name, if present."),
@@ -113,78 +107,18 @@ const customSectionItemSchema = z.object({
 // ─── Score breakdown schema (mirrors resumeATS.score.json weights) ─────────────
 
 const scoreBreakdownSchema = z.object({
-    totalScore: z.number().min(0).max(100).describe("The candidate's overall ATS score out of 100, computed by summing all section scores (0–100)."),
-    sections: z.object({
-        contactInformation: sectionScoreSchema({
-            fullName:           z.number().min(0).max(2).describe("Award up to 2 points if a full name (first and last) is clearly present. 0 if missing or unclear."),
-            professionalEmail:  z.number().min(0).max(2).describe("Award up to 2 points for a professional email (name@domain). Award fewer points for generic emails like 'test@...' or numbers-only addresses."),
-            phoneNumber:        z.number().min(0).max(2).describe("Award up to 2 points for a valid phone number with country code if applicable. Award fewer points if only a partial number or unclear format."),
-            linkedin:           z.number().min(0).max(2).describe("Award up to 2 points for a LinkedIn profile URL. Award fewer points if the URL is incomplete or broken."),
-            githubOrPortfolio:  z.number().min(0).max(2).describe("Award up to 2 points for a GitHub profile or personal portfolio link. Award fewer points if only one is present or URL looks inactive."),
-        }).describe("Contact Information section score (0–10). Award higher scores when the resume includes complete, professional contact details with multiple verified links."),
-
-        resumeStructure: sectionScoreSchema({
-            professionalSummary: z.number().min(0).max(2).describe("Award up to 2 points for a concise, role-specific professional summary that highlights key strengths. Award fewer points for generic or verbose summaries."),
-            skillsSection:       z.number().min(0).max(2).describe("Award up to 2 points for the presence of a dedicated, well-organized skills section. Award fewer points if skills are scattered or poorly organized."),
-            experienceSection:   z.number().min(0).max(3).describe("Award up to 3 points for a clearly labeled work experience section with proper chronological order. Award fewer points if missing or poorly structured."),
-            projectsSection:     z.number().min(0).max(3).describe("Award up to 3 points for a dedicated projects section with multiple quality entries. Award fewer points if missing or minimal."),
-            educationSection:    z.number().min(0).max(2).describe("Award up to 2 points for a clearly labeled education section with degree, institution, and graduation date. Award fewer points if incomplete."),
-            clearSectionHeadings:z.number().min(0).max(2).describe("Award up to 2 points for using standard, ATS-readable section headings (e.g., 'Skills', 'Experience', 'Education'). Award fewer points if headings are vague or non-standard."),
-            certificationsSection:z.number().min(0).max(1).describe("Award 1 point if a certifications or training section exists. 0 if missing."),
-        }).describe("Resume Structure section score (0–15). Award higher scores when the resume contains all major sections in a logical order with clear headings."),
-
-        atsFormatting: sectionScoreSchema({
-            logicalOrganization:       z.number().min(0).max(4).describe("Award up to 4 points for a logical top-to-bottom resume flow with contact info first, followed by summary, skills, experience, education, and other sections. Award fewer points if the order is confusing."),
-            clearSectionSeparation:    z.number().min(0).max(3).describe("Award up to 3 points for clear visual and textual separation between sections using line breaks or dividers (inferred from text structure only). Award fewer points if sections blend together."),
-            atsFriendlyHeadings:       z.number().min(0).max(3).describe("Award up to 3 points for consistent use of standard ATS-friendly headings without special characters or formatting. Award fewer points if headings use unusual symbols or styling."),
-            appropriateResumeLength:   z.number().min(0).max(2).describe("Award up to 2 points for keeping the resume within 1–2 pages of content. Award fewer points for excessive length (3+ pages) or extremely brief content."),
-            professionalFormatting:    z.number().min(0).max(3).describe("Award up to 3 points for a clean, professional appearance using standard fonts and spacing. Note: Evaluate formatting only from extracted text; do not assume layout information beyond what is evident in the text."),
-            consistentFormatting:      z.number().min(0).max(3).describe("Award up to 3 points for consistent fonts, spacing, and alignment throughout the resume. Award fewer points if formatting varies significantly between sections."),
-            minimalDecorativeElements: z.number().min(0).max(2).describe("Award up to 2 points for minimal use of tables, graphics, images, or other ATS-breaking elements. Award fewer points if decorative elements are excessive."),
-        }).describe("ATS Formatting section score (0–20). Evaluate formatting only from the extracted resume text. Award higher scores when formatting is clean, organized, and ATS-compatible."),
-
-        skills: sectionScoreSchema({
-            technicalSkills: z.number().min(0).max(5).describe("Award higher scores when the resume demonstrates a broad and relevant technical skill set (e.g., 'React, Node.js, Express.js, MongoDB, Docker, Redis, AWS' scores higher than just 'React'). Consider breadth, depth, relevance, and diversity."),
-            skillOrganization:z.number().min(0).max(3).describe("Award up to 3 points for organizing skills into logical categories (e.g., 'Languages', 'Frameworks', 'Cloud Platforms', 'Tools'). Award fewer points if skills are listed randomly."),
-            relevantSkills:  z.number().min(0).max(3).describe("Award up to 3 points when most listed skills are relevant to modern job descriptions and industry trends. Award fewer points for outdated or niche-only skills."),
-            softSkills:      z.number().min(0).max(2).describe("Award up to 2 points for including soft skills (e.g., 'Communication', 'Leadership', 'Problem-solving'). Award fewer points if soft skills are absent or minimal."),
-            duplicateFree:   z.number().min(0).max(2).describe("Award up to 2 points if skills are listed without significant duplication. Award fewer points for repeated skill entries."),
-        }).describe("Skills section score (0–15). Award higher scores when the resume demonstrates a broad and relevant technical skill set, well-organized by category."),
-
-        experience: sectionScoreSchema({
-            jobTitle:             z.number().min(0).max(2).describe("Award up to 2 points if each role clearly states the job title. Award fewer points if titles are unclear or missing."),
-            companyName:          z.number().min(0).max(2).describe("Award up to 2 points if each role clearly states the company name. Award fewer points if company names are missing or vague."),
-            employmentDates:      z.number().min(0).max(2).describe("Award up to 2 points if each role includes start and end dates (or 'Currently working'). Award fewer points for incomplete or missing dates."),
-            bulletPoints:         z.number().min(0).max(2).describe("Award up to 2 points for using bullet points instead of long paragraphs for job descriptions. Award fewer points if descriptions are in paragraph form."),
-            actionVerbs:          z.number().min(0).max(3).describe("Award up to 3 points for consistently starting bullet points with strong action verbs (e.g., 'Developed', 'Implemented', 'Led'). Award fewer points for weak verbs or passive voice."),
-            quantifiedAchievements:z.number().min(0).max(4).describe("Award higher scores for bullet points that include quantified, data-backed achievements with measurable impact (e.g., 'Reduced load time by 40%', 'Increased user engagement by 25%'). Award fewer points for generic descriptions without metrics."),
-        }).describe("Experience section score (0–15). Award higher scores for resumes with clear job titles, company names, dates, action verbs, and especially quantified achievements with measurable impact."),
-        
-        projects: sectionScoreSchema({
-            projectTitle:      z.number().min(0).max(2).describe("Award up to 2 points for each project having a clear, descriptive title. Award fewer points for unclear or missing titles."),
-            projectDescription:z.number().min(0).max(3).describe("Award up to 3 points for clear, high-quality descriptions explaining what the project does and the problem it solves. Award fewer points for vague or incomplete descriptions."),
-            technologyStack:   z.number().min(0).max(3).describe("Award up to 3 points for explicitly listing the technology stack, frameworks, and libraries used in the project. Award fewer points if technologies are missing or unclear."),
-            githubLink:        z.number().min(0).max(2).describe("Award up to 2 points if a GitHub repository link is included. Award fewer points if the link is missing or inactive."),
-            liveDemo:          z.number().min(0).max(2).describe("Award up to 2 points if a live demo or deployed project link is included. Award fewer points if missing."),
-            projectImpact:     z.number().min(0).max(3).describe("Award up to 3 points for describing measurable project impact, key achievements, or lessons learned. Award fewer points for generic or vague outcomes."),
-        }).describe("Projects section score (0–15). Award higher scores based on description quality, technology clarity, and availability of GitHub or live demo links."),
-
-        education: sectionScoreSchema({
-            degree:          z.number().min(0).max(2).describe("Award up to 2 points for clearly listing the degree or qualification (e.g., 'B.Tech', 'M.Sc', '12th Standard'). Award fewer points if missing or unclear."),
-            institution:     z.number().min(0).max(1).describe("Award 1 point for naming the institution. 0 if missing."),
-            graduationYear:  z.number().min(0).max(1).describe("Award 1 point for including the graduation or expected graduation year. 0 if missing."),
-            cgpaOrPercentage:z.number().min(0).max(1).describe("Award 1 point if CGPA or percentage score is included. 0 if missing."),
-        }).describe("Education section score (0–5). Award higher scores for complete education information including degree, institution, year, and academic performance metrics."),
-
-        grammarAndReadability: sectionScoreSchema({
-            grammar:             z.number().min(0).max(2).describe("Award up to 2 points for correct grammar throughout the resume. Award fewer points for grammatical errors or awkward phrasing."),
-            spelling:            z.number().min(0).max(1).describe("Award 1 point for correct spelling throughout. 0 if spelling errors are present."),
-            professionalLanguage:z.number().min(0).max(1).describe("Award 1 point for consistent use of professional, formal language. 0 if tone is casual or unprofessional."),
-            readability:         z.number().min(0).max(1).describe("Award 1 point for overall readability and conciseness. 0 if content is verbose, hard to follow, or poorly organized."),
-        }).describe("Grammar & Readability section score (0–5). Award higher scores for professional language, good grammar, concise writing, consistent tone, and easy readability."),
-    }).describe("Section-by-section ATS score breakdown."),
-}).describe("Full ATS score breakdown mirroring the resumeATS.score.json weight system. totalScore is the sum of all section scores (0–100).");
-
+  totalScore: z.number().describe("Overall ATS score out of 100."),
+  sections: z.object({
+    contactInformation: z.number().describe("Score out of 10."),
+    resumeStructure: z.number().describe("Score out of 15."),
+    atsFormatting: z.number().describe("Score out of 20."),
+    skills: z.number().describe("Score out of 15."),
+    experience: z.number().describe("Score out of 15."),
+    projects: z.number().describe("Score out of 15."),
+    education: z.number().describe("Score out of 5."),
+    grammarAndReadability: z.number().describe("Score out of 5."),
+  }),
+})
 // ─── Feedback & improvement suggestions ──────────────────────────────────────
 
 const improvementSuggestionSchema = z.object({
@@ -192,7 +126,7 @@ const improvementSuggestionSchema = z.object({
     issue:      z.string().describe("A clear description of the problem or gap identified in this section."),
     suggestion: z.string().describe("A specific, actionable recommendation to improve the section and raise the ATS score."),
     impact:     z.enum(["low", "medium", "high"]).describe("Expected impact of applying this suggestion on the overall ATS score: low, medium, or high."),
-}).describe("A single actionable improvement suggestion.");
+}).describe("Give improvement suggestions for all sections that have low scores as max.");
 
 const strengthSchema = z.object({
     section:     z.string().describe("The resume section where this strength was observed."),
@@ -253,7 +187,7 @@ const resumeATSReportSchema = z.object({
         feedback: z.object({
 
             strengths: z.array(strengthSchema)
-                .describe("A list of specific strengths and positive observations about the resume."),
+                .describe("A list of specific strengths and positive observations about the resume and make sure all the less score section include."),
 
             improvements: z.array(improvementSuggestionSchema)
                 .describe("A prioritised list of actionable improvement suggestions to increase the ATS score."),

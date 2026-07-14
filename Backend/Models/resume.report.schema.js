@@ -1,16 +1,21 @@
 import mongoose from "mongoose"
 
 
+// sections : {
+    //     atsFormatting
+    //     contactInformation
+    //     education
+    //     experience
+    //     grammarAndReadability
+    //     projects
+    //     resumeStructure
+    //     skills
+    // },
+
 const scoreBreakdownSchema = new mongoose.Schema({
     sections : {
-        atsFormatting
-        contactInformation
-        education
-        experience
-        grammarAndReadability
-        projects
-        resumeStructure
-        skills
+        type : Object,
+
     },
     totalScore:{
         type : Number,
@@ -31,7 +36,9 @@ const feedbackSchema = new mongoose.Schema({
         required : [true,"feedback is required"]
     },
     strengths:{
-
+        type : Array,
+        required : [true," Strengths are required "],
+        default : []
     }
 })
 
@@ -53,5 +60,7 @@ const resumeSchema  = new mongoose.Schema({
         // required : [true," Message is required "],
     },
     report: resumeReportSchema,
-    resume :
+    // resume : ""
 })
+
+export default resumeSchema
