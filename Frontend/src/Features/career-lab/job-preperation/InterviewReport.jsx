@@ -21,23 +21,23 @@ const QuestionAccordion = ({ idx, item }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="rounded-xl border border-slate-200 bg-white">
-      <div className="flex items-center justify-between p-4" onClick={() => setOpen((v) => !v)}>
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-slate-50 text-slate-700 font-semibold">{idx + 1}</div>
+    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} className="w-full rounded-xl border border-slate-200 bg-white overflow-hidden">
+      <button type="button" className="flex w-full items-start justify-between p-4 text-left" onClick={() => setOpen((v) => !v)}>
+        <div className="flex min-w-0 flex-1 items-start gap-3">
+          <div className="flex h-9 min-w-[36px] w-9 items-center justify-center rounded-md bg-slate-50 text-slate-700 font-semibold">{idx + 1}</div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-slate-900">{item.question}</p>
-            <p className="text-xs text-slate-500 truncate">{item.intension}</p>
+            <p className="text-sm font-medium text-slate-900 break-words">{item.question}</p>
+            <p className="text-xs text-slate-500 break-words">{item.intension}</p>
           </div>
         </div>
-        <ChevronDown className={`text-slate-500 ${open ? 'rotate-180' : ''}`} />
-      </div>
+        <ChevronDown className={`ml-4 flex-shrink-0 text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
       {open && (
         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} className="border-t border-slate-100 p-4">
           <p className="text-xs font-semibold text-slate-700">Interviewer Intention</p>
-          <p className="mt-1 text-sm text-slate-600">{item.intension}</p>
+          <p className="mt-1 text-sm text-slate-600 break-words">{item.intension}</p>
           <p className="mt-3 text-xs font-semibold text-slate-700">Suggested Answer</p>
-          <p className="mt-1 text-sm text-slate-600">{item.answer}</p>
+          <p className="mt-1 text-sm text-slate-600 break-words">{item.answer}</p>
         </motion.div>
       )}
     </motion.div>
@@ -150,8 +150,8 @@ const InterviewReport = () => {
             </Card>
           </div>
         ) : (
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-4">
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+            <div className="space-y-4 min-w-0">
               <Card className="border border-slate-200 bg-white shadow-sm">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between gap-4">
@@ -191,24 +191,24 @@ const InterviewReport = () => {
               </Card>
             </div>
 
-            <div className="space-y-4">
-              <Card className="border border-slate-200 bg-white shadow-sm">
+            <div className="space-y-4 min-w-0">
+              <Card className="border border-slate-200 bg-white shadow-sm overflow-hidden">
                 <CardHeader className="px-4 py-3">
                   <CardTitle className="text-sm font-semibold text-slate-900">Technical Interview Questions</CardTitle>
                   <CardDescription className="mt-1 text-xs text-slate-500">Click to reveal intention and suggested answer.</CardDescription>
                 </CardHeader>
-                <CardContent className="p-4 space-y-3">
+                <CardContent className="p-4 space-y-3 overflow-hidden">
                   {report?.technicalQuestions?.map((q, i) => (
                     <QuestionAccordion key={i} idx={i} item={q} />
                   ))}
                 </CardContent>
               </Card>
 
-              <Card className="border border-slate-200 bg-white shadow-sm">
+              <Card className="border border-slate-200 bg-white shadow-sm overflow-hidden">
                 <CardHeader className="px-4 py-3">
                   <CardTitle className="text-sm font-semibold text-slate-900">Behavioral Questions</CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 space-y-3">
+                <CardContent className="p-4 space-y-3 overflow-hidden">
                   {report?.behaviourQuestions?.map((q, i) => (
                     <QuestionAccordion key={i} idx={i} item={q} />
                   ))}
