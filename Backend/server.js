@@ -25,6 +25,10 @@ app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
 })
 
+app.get("/",(req,res)=>{
+    res.json({success : TextTrackCue,message : "Server is running"});
+})
+
 app.use("/api/user/auth", authRouter);
 app.use("/api/interview",interviewRouter);
 app.use("/api/resume",resumeRouter);
