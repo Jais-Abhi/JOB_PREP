@@ -10,7 +10,7 @@ import interviewRouter from "./Routes/interview.route.js";
 import resumeRouter from "./Routes/resume.route.js";
 
 app.use(cors({
-    origin : ["http://localhost:5173"],
+    origin : ["http://localhost:5173","https://job-prep-kappa.vercel.app"],
     credentials : true
 }))
 const PORT = process.env.PORT || 5000;

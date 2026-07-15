@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router';
 import {
@@ -122,6 +122,25 @@ const careerToolsColumns = [
 const NavDropdown = ({ label, children }) => {
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handlePointerDown = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        close();
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+    };
+  }, [open]);
 
   const show = () => {
     clearTimeout(timeoutRef.current);
@@ -151,6 +170,7 @@ const NavDropdown = ({ label, children }) => {
 
   return (
     <div
+      ref={dropdownRef}
       className="relative"
       onMouseEnter={() => {
         if (window.innerWidth >= 640) show();
