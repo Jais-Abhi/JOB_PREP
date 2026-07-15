@@ -135,13 +135,35 @@ const NavDropdown = ({ label, children }) => {
     setOpen(false);
   };
 
+  const toggleDropdown = (e) => {
+    if (window.innerWidth < 640) {
+      e.preventDefault();
+      setOpen((prev) => !prev);
+      return;
+    }
+
+    if (open) {
+      close();
+    } else {
+      show();
+    }
+  };
+
   return (
     <div
       className="relative"
-      onMouseEnter={show}
-      onMouseLeave={hide}
+      onMouseEnter={() => {
+        if (window.innerWidth >= 640) show();
+      }}
+      onMouseLeave={() => {
+        if (window.innerWidth >= 640) hide();
+      }}
     >
-      <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-all duration-150">
+      <button
+        type="button"
+        onClick={toggleDropdown}
+        className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-all duration-150"
+      >
         {label}
         <ChevronDown
           size={14}
@@ -151,12 +173,14 @@ const NavDropdown = ({ label, children }) => {
 
       <AnimatePresence>
         {open && (
-          /* The outer wrapper uses pt-2 to bridge the gap between the button 
-             and the visible panel, eliminating the dead zone that triggers onMouseLeave */
           <div
-            className="absolute left-0 top-full pt-2 z-50"
-            onMouseEnter={show}
-            onMouseLeave={hide}
+            className="fixed inset-x-3 top-16 z-[60] sm:absolute sm:inset-auto sm:left-0 sm:top-full sm:pt-2"
+            onMouseEnter={() => {
+              if (window.innerWidth >= 640) show();
+            }}
+            onMouseLeave={() => {
+              if (window.innerWidth >= 640) hide();
+            }}
             onClick={close}
           >
             <motion.div
@@ -164,7 +188,7 @@ const NavDropdown = ({ label, children }) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 3, scale: 0.98 }}
               transition={{ duration: 0.15 }}
-              className="bg-white border border-slate-200/80 rounded-2xl shadow-xl shadow-slate-200/60 overflow-hidden"
+              className="w-full max-w-[calc(100vw-1.5rem)] max-h-[70vh] overflow-auto bg-white border border-slate-200/80 rounded-2xl shadow-xl shadow-slate-200/60 sm:w-[560px]"
             >
               {children}
             </motion.div>
@@ -180,7 +204,7 @@ const NavDropdown = ({ label, children }) => {
 const DropdownItem = ({ icon: Icon, label, description, to, color, bg }) => (
   <Link
     to={to}
-    className="group flex items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors duration-150 rounded-xl mx-1"
+    className="group flex w-full items-start gap-3 px-4 py-3 hover:bg-slate-50 transition-colors duration-150 rounded-xl mx-1"
   >
     <div className={`flex-shrink-0 w-9 h-9 rounded-lg ${bg} flex items-center justify-center mt-0.5`}>
       <Icon size={18} className={color} />
@@ -255,7 +279,7 @@ const Navbar = () => {
 
             {/* Career Tools */}
             <NavDropdown label="Career Tools">
-              <div className="flex gap-0 p-2" style={{ width: 560 }}>
+              <div className="flex flex-col gap-2 p-2 sm:flex-row sm:gap-0 sm:w-[560px]">
                 {careerToolsColumns.map((col) => (
                   <div key={col.heading} className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 px-3 pt-1 pb-2">
